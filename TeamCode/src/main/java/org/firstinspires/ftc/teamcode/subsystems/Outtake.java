@@ -8,11 +8,20 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import java.time.Duration;
+
 import dev.nextftc.bindings.Button;
+import dev.nextftc.core.commands.delays.Delay;
+import dev.nextftc.core.commands.groups.SequentialGroup;
+import dev.nextftc.core.commands.utility.InstantCommand;
+import dev.nextftc.core.components.SubsystemComponent;
 
 public class Outtake {
     private DcMotor motor;
     private Servo hood;
+
+    public InstantCommand shoot;
+    public InstantCommand stop;
 
     public void init(HardwareMap hwMap, Gamepad gamepad) {
         motor = hwMap.get(DcMotor.class, "outtakeMotor");
@@ -22,28 +31,16 @@ public class Outtake {
         hood = hwMap.get(Servo.class, "hoodServo");
         hood.setDirection(Servo.Direction.REVERSE);
 
+        shoot = new InstantCommand(()->motor.setPower(-1));
+        stop = new InstantCommand(()->motor.setPower(0));
 
-//        Button dpUp = button(() -> gamepad.dpad_up)
-//                .whenBecomesTrue(() -> hood.setPosition(hood.getPosition() + 0.1));
-//
-//        Button dpDown = button(() -> gamepad.dpad_down)
-//                .whenBecomesTrue(() -> hood.setPosition(hood.getPosition() - 0.1));
 
         Button rb = button(() -> gamepad.right_bumper)
-                .whenTrue(this::shoot)
-                .whenBecomesFalse(this::stop);
+                .whenBecomesTrue(shoot::schedule)
+                .whenBecomesFalse(stop::schedule);
+
+ 
     }
-
-
-
-    public void shoot() {
-        motor.setPower(-1);
-    }
-
-    public void stop() {
-        motor.setPower(0);
-    }
-
 
     public static void loop() {}
 }
