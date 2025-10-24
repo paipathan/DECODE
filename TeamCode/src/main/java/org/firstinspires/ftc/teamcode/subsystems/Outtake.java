@@ -31,7 +31,7 @@ public class Outtake {
         hood = hwMap.get(Servo.class, "hoodServo");
         hood.setDirection(Servo.Direction.REVERSE);
 
-        shoot = new InstantCommand(()->motor.setPower(-1));
+        shoot = new InstantCommand(()->motor.setPower(1));
         stop = new InstantCommand(()->motor.setPower(0));
 
 

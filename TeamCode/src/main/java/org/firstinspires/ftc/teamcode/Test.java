@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 
 import dev.nextftc.bindings.BindingManager;
+import dev.nextftc.core.commands.CommandManager;
 
 @TeleOp
 public class Test extends LinearOpMode {
@@ -17,9 +18,6 @@ public class Test extends LinearOpMode {
     public Outtake outtake;
     @Override
     public void runOpMode() throws InterruptedException {
-
-
-
         intake = new Intake();
         intake.init(hardwareMap, gamepad1);
 
@@ -36,13 +34,14 @@ public class Test extends LinearOpMode {
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
         waitForStart();
+
 
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
             BindingManager.update();
+            CommandManager.INSTANCE.run();
 
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x * 1.1;
