@@ -17,29 +17,43 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.components.SubsystemComponent;
 
 public class Outtake {
-    private DcMotor motor;
+    private DcMotor topMotor;
+    private DcMotor bottomMotor;
     private Servo hood;
 
-    public InstantCommand shoot;
-    public InstantCommand stop;
+    boolean dualMotorMode = true;
+
+    public InstantCommand shoot2;
+    public InstantCommand stop2;
 
     public void init(HardwareMap hwMap, Gamepad gamepad) {
-        motor = hwMap.get(DcMotor.class, "outtakeMotor");
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        topMotor = hwMap.get(DcMotor.class, "topOuttakeMotor");
+        topMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        topMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        bottomMotor = hwMap.get(DcMotor.class, "bottomOuttakeMotor");
+        bottomMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bottomMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         hood = hwMap.get(Servo.class, "hoodServo");
         hood.setDirection(Servo.Direction.REVERSE);
 
-        shoot = new InstantCommand(()->motor.setPower(1));
-        stop = new InstantCommand(()->motor.setPower(0));
+
+        shoot2 = new InstantCommand(() -> {
+            topMotor.setPower(1);
+            bottomMotor.setPower(1);
+        });
+
+        stop2 = new InstantCommand(() -> {
+            topMotor.setPower(0);
+            bottomMotor.setPower(0);
+        });
 
 
         Button rb = button(() -> gamepad.right_bumper)
-                .whenBecomesTrue(shoot::schedule)
-                .whenBecomesFalse(stop::schedule);
+                .whenBecomesTrue(shoot2::schedule)
+                .whenBecomesFalse(stop2::schedule);
 
- 
     }
 
     public static void loop() {}
