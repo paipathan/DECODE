@@ -20,23 +20,20 @@ public class Intake {
 
     public Command myLambdaCommand;
 
-    public void init(HardwareMap hwMap, Gamepad gamepad) {
+    public Intake(HardwareMap hwMap, Gamepad gamepad) {
         motor = hwMap.get(DcMotor.class, "intakeMotor");
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-         start = new InstantCommand(()->motor.setPower(-1));
-         stop = new InstantCommand(()->motor.setPower(0));
-         reverse = new InstantCommand(()->motor.setPower(1));
+        start = new InstantCommand(()->motor.setPower(-1));
+        stop = new InstantCommand(()->motor.setPower(0));
+        reverse = new InstantCommand(()->motor.setPower(1));
 
 
         Button lb = button(() -> gamepad.left_bumper)
                 .whenBecomesTrue(start::schedule)
                 .whenBecomesFalse(stop::schedule);
 
-        Button b = button(() -> gamepad.b)
-                .whenBecomesTrue(reverse::schedule)
-                .whenBecomesFalse(stop::schedule);
-
     }
+
 }

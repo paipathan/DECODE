@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
+import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
@@ -18,21 +19,22 @@ public class Constants {
     static double robotMassV1 = 0.938;
     static double forwardV = 77.47656300615128; // test 2: 79.07251679918099
     static double strafeV = 58.13652697505066; // test 2: 59.71897433734531 || 57.41994932375924
-    static double forwardZeroPowerAccel = -34.687022166256604; // test 2: -34.687022166256604 || -33.74762702215598 || abhays test: -26.917226893087108
-    static double lateralZeroPowerAccel = -61.163609551169515; // test 2: -63.878670347567514 || -61.163609551169515
+    static double forwardZeroPowerAccel = -34.687022166256604;
+    static double lateralZeroPowerAccel = -61.163609551169515;
 
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(robotMassV1)
             .forwardZeroPowerAcceleration(forwardZeroPowerAccel)
             .lateralZeroPowerAcceleration(lateralZeroPowerAccel)
             .translationalPIDFCoefficients(new PIDFCoefficients(
-                    0.075, // good range is 0.75 to 0.85 cant rlly know yet till we try actual pathing
+                    0.075,
                     0,
-                    0.11, // 0.01 to 0.12
-                    0.023 // good range is 0.21 to 0.28.
+                    0,
+                    0
                     )
             )
-            .headingPIDFCoefficients(new PIDFCoefficients(1, 0, 0, 0.01));
+            .headingPIDFCoefficients(new PIDFCoefficients(1, 0, 0, 0.01))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.05,0,0.00001,0.6, 0.01));
 
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
     public static MecanumConstants driveConstants = new MecanumConstants()
@@ -51,7 +53,7 @@ public class Constants {
 
 
     public static TwoWheelConstants twoWheelLocalizerConstants = new TwoWheelConstants()
-            .forwardPodY(-3.95)
+            .forwardPodY(3.95)
             .strafePodX(0)
             .forwardEncoder_HardwareMapName("intakeMotor")
             .forwardEncoderDirection(Encoder.FORWARD)

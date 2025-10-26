@@ -4,6 +4,7 @@ import static dev.nextftc.bindings.Bindings.button;
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -21,40 +22,43 @@ public class Outtake {
     private DcMotor bottomMotor;
     private Servo hood;
 
-    boolean dualMotorMode = true;
+    public InstantCommand shoot;
+    public InstantCommand stop;
 
-    public InstantCommand shoot2;
-    public InstantCommand stop2;
-
-    public void init(HardwareMap hwMap, Gamepad gamepad) {
+    public Outtake(HardwareMap hwMap, Gamepad gamepad) {
         topMotor = hwMap.get(DcMotor.class, "topOuttakeMotor");
         topMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         topMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        topMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         bottomMotor = hwMap.get(DcMotor.class, "bottomOuttakeMotor");
         bottomMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bottomMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         bottomMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         hood = hwMap.get(Servo.class, "hoodServo");
         hood.setDirection(Servo.Direction.REVERSE);
 
 
-        shoot2 = new InstantCommand(() -> {
+        shoot = new InstantCommand(() -> {
             topMotor.setPower(1);
             bottomMotor.setPower(1);
+            gamepad.rumble(1, 1, Gamepad.RUMBLE_DURATION_CONTINUOUS);
         });
 
-        stop2 = new InstantCommand(() -> {
+        stop = new InstantCommand(() -> {
             topMotor.setPower(0);
             bottomMotor.setPower(0);
+            gamepad.stopRumble();
         });
+
 
 
         Button rb = button(() -> gamepad.right_bumper)
-                .whenBecomesTrue(shoot2::schedule)
-                .whenBecomesFalse(stop2::schedule);
-
+                .whenBecomesTrue(shoot::schedule)
+                .whenBecomesFalse(stop::schedule);
     }
+
 
     public static void loop() {}
 }
