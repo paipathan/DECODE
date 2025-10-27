@@ -30,6 +30,8 @@ public class Red extends LinearOpMode {
         drive.startTeleopDrive();
         drive.follower.update();
 
+        CommandManager.INSTANCE.cancelAll();
+
         waitForStart();
 
 

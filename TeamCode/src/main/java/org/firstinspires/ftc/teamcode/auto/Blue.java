@@ -38,30 +38,30 @@ public class Blue extends LinearOpMode {
         PathChain line1 = builder
                 .addPath(
                         new BezierCurve(
-                                new Pose(71.888, 23.963),
-                                new Pose(57.331, 84.429),
-                                new Pose(30.457, 117.798)
+                                new Pose(56.200, 8.200),
+                                new Pose(72.336, 75.695),
+                                new Pose(30.000, 117.000)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(134))
                 .build();
 
-        dt.follower.setStartingPose(new Pose(71.88802488335925, 23.96267496111975, Math.toRadians(90)));
+        dt.follower.setStartingPose(new Pose(56.2, 8.2, Math.toRadians(90)));
 
         CommandManager.INSTANCE.cancelAll();
         SequentialGroup autoRoutine = new SequentialGroup(
                 dt.followPath(line1),
                 outtake.shoot,
-                new Delay(2),
+                new Delay(3),
                 intake.start,
-                new Delay(1.5),
+                new Delay(2.5),
                 outtake.stop,
-                new Delay(2),
+                new Delay(3),
                 intake.stop,
                 outtake.shoot,
-                new Delay(2),
+                new Delay(3),
                 intake.start,
-                new Delay(2),
+                new Delay(3),
                 intake.stop,
                 outtake.stop
         );

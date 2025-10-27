@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
-import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -18,8 +16,8 @@ import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 
 
-@Autonomous(name="Red Auto", group="Auto")
-public class Red extends LinearOpMode {
+@Autonomous(name="goalpotauto", group="Auto")
+public class goalpotauto extends LinearOpMode {
 
     public DriveTrain dt;
     public Outtake outtake;
@@ -33,32 +31,21 @@ public class Red extends LinearOpMode {
 
         PathBuilder builder = new PathBuilder(dt.follower, Constants.pathConstraints);
 
-        PathChain line1 = builder
-                .addPath(
-                        new BezierCurve(
-                                new Pose(86.800, 9.200),
-                                new Pose(72.560, 75.247),
-                                new Pose(115.558, 120.485)
-                        )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(38))
-                .build();
+        dt.follower.setStartingPose(new Pose(56.2, 8.2, Math.toRadians(90)));
 
-        dt.follower.setStartingPose(new Pose(86.800, 9.2, Math.toRadians(90)));
-
+        CommandManager.INSTANCE.cancelAll();
         SequentialGroup autoRoutine = new SequentialGroup(
-                dt.followPath(line1),
                 outtake.shoot,
-                new Delay(3),
+                new Delay(4),
                 intake.start,
-                new Delay(2.5),
+                new Delay(4),
                 outtake.stop,
-                new Delay(3),
+                new Delay(4),
                 intake.stop,
                 outtake.shoot,
-                new Delay(3),
+                new Delay(4),
                 intake.start,
-                new Delay(3),
+                new Delay(4),
                 intake.stop,
                 outtake.stop
         );

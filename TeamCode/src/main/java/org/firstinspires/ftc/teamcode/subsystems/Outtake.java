@@ -18,7 +18,7 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.components.SubsystemComponent;
 
 public class Outtake {
-    private DcMotor topMotor;
+//    private DcMotor topMotor;
     private DcMotor bottomMotor;
     private Servo hood;
 
@@ -26,10 +26,10 @@ public class Outtake {
     public InstantCommand stop;
 
     public Outtake(HardwareMap hwMap, Gamepad gamepad) {
-        topMotor = hwMap.get(DcMotor.class, "topOuttakeMotor");
-        topMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        topMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        topMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+//        topMotor = hwMap.get(DcMotor.class, "topOuttakeMotor");
+//        topMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        topMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        topMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         bottomMotor = hwMap.get(DcMotor.class, "bottomOuttakeMotor");
         bottomMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -41,13 +41,13 @@ public class Outtake {
 
 
         shoot = new InstantCommand(() -> {
-            topMotor.setPower(1);
+//            topMotor.setPower(1);
             bottomMotor.setPower(1);
             gamepad.rumble(1, 1, Gamepad.RUMBLE_DURATION_CONTINUOUS);
         });
 
         stop = new InstantCommand(() -> {
-            topMotor.setPower(0);
+//            topMotor.setPower(0);
             bottomMotor.setPower(0);
             gamepad.stopRumble();
         });

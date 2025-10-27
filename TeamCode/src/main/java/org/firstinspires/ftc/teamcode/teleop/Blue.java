@@ -30,6 +30,9 @@ public class Blue extends LinearOpMode {
         drive.startTeleopDrive();
         drive.follower.update();
 
+        CommandManager.INSTANCE.cancelAll();
+
+
         waitForStart();
 
 
