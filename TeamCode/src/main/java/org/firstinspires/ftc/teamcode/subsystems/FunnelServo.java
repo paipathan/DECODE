@@ -11,7 +11,7 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 
 
 public class FunnelServo {
-    // private Servo leftServo;
+    private Servo leftServo;
     private Servo rightServo;
     private double leftServoPose = 0;
     private double rightServoPose = 0;
@@ -26,14 +26,14 @@ public class FunnelServo {
 
     public FunnelServo(HardwareMap hwMap, Gamepad gamepad){
 
-        // leftServo = hwMap.get(Servo.class, "leftServo");
+        leftServo = hwMap.get(Servo.class, "leftServo");
         rightServo = hwMap.get(Servo.class, "rightServo");
 
         leftServoPose = 0;
         rightServoPose = 0;
 
 
-        // leftServo.setPosition(leftServoPose);
+        leftServo.setPosition(leftServoPose);
         rightServo.setPosition(rightServoPose);
 
         start = new InstantCommand(() -> {
@@ -41,29 +41,20 @@ public class FunnelServo {
         });
 
         stop = new InstantCommand(() -> {
-            // leftServo.setPosition(leftServoPose);
+            leftServo.setPosition(leftServoPose);
             rightServo.setPosition(rightServoPose);
         });
 
         reverse = new InstantCommand(() -> {
             adjustServos(-STEP);
         });
-
-        Button dpad_up = button(() -> gamepad.dpad_up)
-                .whenBecomesTrue(start::schedule)
-                .whenBecomesFalse(stop::schedule);
-
-        Button dpad_down = button(() -> gamepad.dpad_down)
-                .whenBecomesTrue(reverse::schedule)
-                .whenBecomesFalse(stop::schedule);
-
     }
 
     private void adjustServos(double step) {
         leftServoPose = clip(leftServoPose + step);
         rightServoPose = clip(rightServoPose + step);
 
-        // leftServo.setPosition(leftServoPose);
+        leftServo.setPosition(leftServoPose);
         rightServo.setPosition(rightServoPose);
     }
 
