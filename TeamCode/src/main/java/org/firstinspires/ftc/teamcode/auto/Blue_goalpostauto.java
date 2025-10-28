@@ -16,8 +16,8 @@ import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 
 
-@Autonomous(name="goalpotauto", group="Auto")
-public class goalpotauto extends LinearOpMode {
+@Autonomous(name="Blue_goalpostauto", group="Auto")
+public class Blue_goalpostauto extends LinearOpMode {
 
     public DriveTrain dt;
     public Outtake outtake;
@@ -31,7 +31,7 @@ public class goalpotauto extends LinearOpMode {
 
         PathBuilder builder = new PathBuilder(dt.follower, Constants.pathConstraints);
 
-        dt.follower.setStartingPose(new Pose(56.2, 8.2, Math.toRadians(90)));
+        dt.follower.setStartingPose(new Pose(27.22053675612602, 130.55775962660445, Math.toRadians(144)));
 
         CommandManager.INSTANCE.cancelAll();
         SequentialGroup autoRoutine = new SequentialGroup(

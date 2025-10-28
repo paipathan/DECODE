@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import org.firstinspires.ftc.teamcode.subsystems.FunnelServo;
 
 import dev.nextftc.bindings.BindingManager;
 import dev.nextftc.core.commands.CommandManager;
@@ -19,12 +20,15 @@ public class Blue extends LinearOpMode {
     public DriveTrain drive;
     public Intake intake;
     public Outtake outtake;
+    public FunnelServo funnelServo;
 
     @Override
     public void runOpMode() throws InterruptedException {
         intake = new Intake(hardwareMap, gamepad1);
         outtake = new Outtake(hardwareMap, gamepad1);
         drive = new DriveTrain(hardwareMap, gamepad1);
+        funnelServo = new FunnelServo(hardwareMap, gamepad1);
+
 
         drive.setStartingPose(new Pose(72, 72, Math.toRadians(90)));
         drive.startTeleopDrive();
@@ -32,11 +36,7 @@ public class Blue extends LinearOpMode {
 
         CommandManager.INSTANCE.cancelAll();
 
-
         waitForStart();
-
-
-
 
         while(opModeIsActive()) {
             BindingManager.update();
