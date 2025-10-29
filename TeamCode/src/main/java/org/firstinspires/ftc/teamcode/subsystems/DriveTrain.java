@@ -32,11 +32,11 @@ public class DriveTrain {
         follower = Constants.createFollower(hwMap);
         this.gamepad = gamepad;
 
-        Button lt = button(() -> gamepad.left_trigger > 0.4)
+        Button lt = button(() -> gamepad.a)
                 .whenBecomesTrue(() -> alignToGoal = true)
                 .whenBecomesFalse(() -> {
                     alignToGoal = false;
-                    lastHeadingError = 0; // Reset when disabling
+                    lastHeadingError = 0;
                 });
 
         Button a = button(() -> gamepad.a)
@@ -64,7 +64,6 @@ public class DriveTrain {
 
 
     private void driveWithHeadingLock() {
-        // Get current robot position
         Pose currentPose = follower.getPose();
 
         double deltaX = targetPosition.getX() - currentPose.getX();

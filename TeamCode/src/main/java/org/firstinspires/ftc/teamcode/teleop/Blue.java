@@ -31,18 +31,21 @@ public class Blue extends LinearOpMode {
         drive.follower.update();
 
         CommandManager.INSTANCE.cancelAll();
-
-
         waitForStart();
-
-
-
 
         while(opModeIsActive()) {
             BindingManager.update();
             CommandManager.INSTANCE.run();
 
+            telemetry.addData("Top Outtake RPM", outtake.topRPM);
+            telemetry.addData("Bottom Outtake RPM", outtake.bottomRPM);
+
+
+
+            telemetry.update();
+
             drive.loop();
+            outtake.loop();
 
             Drawing.init();
             Drawing.drawRobot(drive.follower.getPose());

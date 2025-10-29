@@ -16,8 +16,8 @@ import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 
 
-@Autonomous(name="goalpotauto", group="Auto")
-public class goalpotauto extends LinearOpMode {
+@Autonomous(name="GoalPost", group="Auto")
+public class GoalPost extends LinearOpMode {
 
     public DriveTrain dt;
     public Outtake outtake;
