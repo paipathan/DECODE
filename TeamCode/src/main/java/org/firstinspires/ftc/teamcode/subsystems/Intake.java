@@ -33,9 +33,9 @@ public class Intake {
 //        leftIntakeServo = hwMap.get(Servo.class, "leftIntakeServo");
 //        rightIntakeServo = hwMap.get(Servo.class, "rightIntakeServo");
 
-        start = new InstantCommand(()->motor.setPower(-1));
+        start = new InstantCommand(()->motor.setPower(1));
         stop = new InstantCommand(()->motor.setPower(0));
-        reverse = new InstantCommand(()->motor.setPower(1));
+        reverse = new InstantCommand(()->motor.setPower(-1));
 
 
         Button lb = button(() -> gamepad.left_bumper)

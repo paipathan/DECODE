@@ -54,16 +54,8 @@ public class Blue extends LinearOpMode {
                 outtake.shoot,
                 new Delay(3),
                 intake.start,
-                new Delay(2.5),
-                outtake.stop,
-                new Delay(3),
-                intake.stop,
-                outtake.shoot,
-                new Delay(3),
-                intake.start,
-                new Delay(3),
-                intake.stop,
-                outtake.stop
+                new Delay(5),
+                intake.stop
         );
 
 
