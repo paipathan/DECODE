@@ -41,30 +41,30 @@ public class BlueV2 extends LinearOpMode {
                 .addPath(
                         new BezierCurve(
                                 new Pose(56.000, 8.000),
-                                new Pose(63.515, 47.552),
-                                new Pose(48.056, 71.916)
+                                new Pose(80.82147024504084, 44.02333722287049),
+                                new Pose(76, 84)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(120))
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(132))
                 .build();
 
-        PathChain gate = builder
+        /*PathChain gate = builder
                 .addPath(
                         new BezierCurve(
                                 new Pose(48.056, 71.916),
                                 new Pose(17.000, 71.916)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(120), Math.toRadians(90))
+                .setLinearHeadingInterpolation(Math.toRadians(105), Math.toRadians(90))
                 .build();
 
         PathChain intake1 = builder
                 .addPath(
                         new BezierCurve(
-                                new Pose()
+                                new Pose(0,0)
                         )
                 )
-                .build();
+                .build();*/
 
         CommandManager.INSTANCE.cancelAll();
         SequentialGroup autoRoutine = new SequentialGroup(
@@ -72,11 +72,8 @@ public class BlueV2 extends LinearOpMode {
                 outtake.shoot,
                 new Delay(3),
                 intake.start,
-                new Delay(2.5),
-                outtake.stop,
                 new Delay(3),
                 intake.stop,
-                outtake.shoot,
                 new Delay(3),
                 intake.start,
                 new Delay(3),

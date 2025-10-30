@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.auto;
 
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.HeadingInterpolator;
 import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -35,35 +36,28 @@ public class Blue extends LinearOpMode {
 
         PathBuilder builder = new PathBuilder(dt.follower, Constants.pathConstraints);
 
-        PathChain line1 = builder
+        dt.follower.setStartingPose(new Pose(56.2, 8.2, Math.toRadians(90)));
+
+        PathChain firstShot = builder
                 .addPath(
                         new BezierCurve(
-                                new Pose(56.200, 8.200),
-                                new Pose(72.336, 75.695),
-                                new Pose(30.000, 117.000)
+                                new Pose(56.000, 8.000),
+                                new Pose(91.239, 38.310),
+                                new Pose(65, 80)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(134))
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(133))
                 .build();
-
-        dt.follower.setStartingPose(new Pose(56.2, 8.2, Math.toRadians(90)));
 
         CommandManager.INSTANCE.cancelAll();
         SequentialGroup autoRoutine = new SequentialGroup(
-                dt.followPath(line1),
+                dt.followPath(firstShot),
                 outtake.shoot,
-                new Delay(3),
+                new Delay(3), // revs shooter
                 intake.start,
-                new Delay(2.5),
+                new Delay(10),
                 outtake.stop,
-                new Delay(3),
-                intake.stop,
-                outtake.shoot,
-                new Delay(3),
-                intake.start,
-                new Delay(3),
-                intake.stop,
-                outtake.stop
+                intake.stop
         );
 
 

@@ -4,6 +4,7 @@ import static dev.nextftc.bindings.Bindings.button;
 
 import com.acmerobotics.dashboard.Mutex;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,9 +15,9 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.LambdaCommand;
 
 public class Intake {
-    private DcMotor motor;
+    private DcMotorEx motor;
 
-    private FunnelServo servos;
+    // private FunnelServo servos;
     public InstantCommand start;
     public InstantCommand stop;
     public InstantCommand reverse;
@@ -24,25 +25,25 @@ public class Intake {
     public Command myLambdaCommand;
 
     public Intake(HardwareMap hwMap, Gamepad gamepad) {
-        motor = hwMap.get(DcMotor.class, "intakeMotor");
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motor = hwMap.get(DcMotorEx.class, "intakeMotor");
+        motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 
-        servos = new FunnelServo(hwMap, gamepad);
+        // servos = new FunnelServo(hwMap, gamepad);
 
         start = new InstantCommand(()-> {
-            motor.setPower(-1);
-            servos.start.schedule();
+            motor.setPower(1);
+            // servos.start.schedule();
         });
 
         stop = new InstantCommand(()->{
             motor.setPower(0);
-            servos.stop.schedule();
+            // servos.stop.schedule();
         });
 
         reverse = new InstantCommand(()-> {
-            motor.setPower(1);
-            servos.reverse.schedule();
+            motor.setPower(-1);
+            // servos.reverse.schedule();
         });
 
 

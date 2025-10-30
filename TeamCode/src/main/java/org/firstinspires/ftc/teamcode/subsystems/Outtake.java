@@ -21,6 +21,7 @@ public class Outtake {
 //    private DcMotor topMotor;
     private DcMotor bottomMotor;
     private DcMotor topMotor;
+    private double topMotorRPM;
     private Servo hood;
 
     public InstantCommand shoot;
@@ -52,8 +53,6 @@ public class Outtake {
             topMotor.setPower(0);
             gamepad.stopRumble();
         });
-
-
 
         Button rb = button(() -> gamepad.right_bumper)
                 .whenBecomesTrue(shoot::schedule)
