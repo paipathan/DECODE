@@ -129,7 +129,7 @@ class FollowPath extends Command {
 
     @Override
     public void start() {
-        driveTrain.follower.followPath(path, false);
+        driveTrain.follower.followPath(path, 1, false);
     }
 
     @Override

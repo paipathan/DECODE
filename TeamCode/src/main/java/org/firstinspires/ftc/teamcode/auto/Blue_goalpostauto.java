@@ -10,7 +10,10 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
@@ -19,6 +22,7 @@ import dev.nextftc.core.commands.groups.SequentialGroup;
 @Autonomous(name="Blue_goalpostauto", group="Auto")
 public class Blue_goalpostauto extends LinearOpMode {
 
+    private static final Logger log = LoggerFactory.getLogger(Blue_goalpostauto.class);
     public DriveTrain dt;
     public Outtake outtake;
     public Intake intake;
@@ -36,18 +40,11 @@ public class Blue_goalpostauto extends LinearOpMode {
         CommandManager.INSTANCE.cancelAll();
         SequentialGroup autoRoutine = new SequentialGroup(
                 outtake.shoot,
-                new Delay(4),
+                new Delay(3),
                 intake.start,
-                new Delay(4),
+                new Delay(6.7),
                 outtake.stop,
-                new Delay(4),
-                intake.stop,
-                outtake.shoot,
-                new Delay(4),
-                intake.start,
-                new Delay(4),
-                intake.stop,
-                outtake.stop
+                intake.stop
         );
 
 

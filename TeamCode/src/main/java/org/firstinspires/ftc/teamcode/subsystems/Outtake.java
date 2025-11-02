@@ -21,12 +21,13 @@ public class Outtake {
 //    private DcMotor topMotor;
     private DcMotor bottomMotor;
     private DcMotor topMotor;
-    private double topMotorRPM;
     private Servo hood;
+    private double hoodPose;
 
     public InstantCommand shoot;
     public InstantCommand stop;
-
+    public InstantCommand hoodUp;
+    public InstantCommand hoodDown;
     public Outtake(HardwareMap hwMap, Gamepad gamepad) {
         topMotor = hwMap.get(DcMotor.class, "topOuttakeMotor");
         topMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -39,6 +40,7 @@ public class Outtake {
         bottomMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         hood = hwMap.get(Servo.class, "hoodServo");
+        hoodPose = 0;
         hood.setDirection(Servo.Direction.REVERSE);
 
 
@@ -54,9 +56,25 @@ public class Outtake {
             gamepad.stopRumble();
         });
 
+        hoodUp = new InstantCommand(() -> {
+            hoodPose+=0.1;
+            hood.setPosition(hoodPose);
+        });
+
+        hoodDown = new InstantCommand(() -> {
+            hoodPose-=0.1;
+            hood.setPosition(hoodPose);
+        });
+
         Button rb = button(() -> gamepad.right_bumper)
                 .whenBecomesTrue(shoot::schedule)
                 .whenBecomesFalse(stop::schedule);
+
+        Button dpad_up = button(() -> gamepad.dpad_up)
+                .whenBecomesTrue(hoodUp::schedule);
+
+        Button dpad_down = button(() -> gamepad.dpad_down)
+                .whenBecomesTrue(hoodDown::schedule);
     }
 
 
