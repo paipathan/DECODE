@@ -8,6 +8,8 @@ import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.LimeLight;
 import org.firstinspires.ftc.teamcode.Robot;
 
+import java.util.Objects;
+
 
 @TeleOp(name="Test TeleOp", group="TeleOp")
 public class Test extends LinearOpMode {
@@ -15,7 +17,7 @@ public class Test extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Robot robot = new Robot(hardwareMap, Alliance.BLUE, gamepad1);
-        robot.follower.setStartingPose(new Pose(72, 72, 90));
+        robot.follower.setStartingPose(new Pose());
 
         waitForStart();
         while(opModeIsActive()) {
@@ -28,6 +30,9 @@ public class Test extends LinearOpMode {
             telemetry.addData("[ODO] Pose x", robot.follower.getPose().getX());
             telemetry.addData("[ODO] Pose y", robot.follower.getPose().getY());
             telemetry.addData("[ODO] Heading", robot.follower.getPose().getHeading());
+
+
+            telemetry.addData("null pose", Objects.isNull(LimeLight.getRobotPose()));
 
 
 

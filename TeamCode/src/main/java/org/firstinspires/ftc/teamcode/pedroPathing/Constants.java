@@ -17,8 +17,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Constants {
     static double robotMassV1 = 0.938;
-    static double forwardV = 77.47656300615128; // test 2: 79.07251679918099
-    static double strafeV = 58.13652697505066; // test 2: 59.71897433734531 || 57.41994932375924
+    static double forwardV = 77.47656300615128;
+    static double strafeV = 58.13652697505066;
     static double forwardZeroPowerAccel = -34.687022166256604;
     static double lateralZeroPowerAccel = -61.163609551169515;
 
@@ -48,7 +48,7 @@ public class Constants {
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .xVelocity(forwardV)
-            .yVelocity(strafeV); // test 2: 59.71897433734531 || 57.41994932375924
+            .yVelocity(strafeV);
 
 
 

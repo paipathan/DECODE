@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
+import java.util.Objects;
+
 public class LimeLight {
 
     private static Limelight3A ll;
@@ -48,12 +50,20 @@ public class LimeLight {
             return null;
         }
 
-
         Pose3D botPose = result.getBotpose();
+
+        double xMeters = botPose.getPosition().x;
+        double yMeters = botPose.getPosition().y;
+        double yawDegrees = botPose.getOrientation().getYaw();
+
+        double xInches = (xMeters * 39.3701);
+        double yInches = (yMeters * 39.3701);
+        double headingRadians = Math.toRadians(yawDegrees);
+
         return new Pose(
-                botPose.getPosition().x * 39.3701,
-                botPose.getPosition().y * 39.3701,
-                Math.toRadians(botPose.getOrientation().getYaw()),
+                xInches,
+                yInches,
+                headingRadians,
                 FTCCoordinates.INSTANCE
         ).getAsCoordinateSystem(PedroCoordinates.INSTANCE);
     }

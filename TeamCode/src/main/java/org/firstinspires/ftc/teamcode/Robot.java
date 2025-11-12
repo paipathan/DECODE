@@ -55,9 +55,11 @@ public class Robot {
         Button toggleIntake = button(() -> gamepad.left_bumper)
                 .whenBecomesTrue(() -> {
                     intake.start.schedule();
+                    outtake.bottomMotor.setPower(0.5);
                 })
                 .whenBecomesFalse(() -> {
                     intake.stop.schedule();
+                    outtake.bottomMotor.setPower(0);
                 });
 
         Button toggleOuttake = button(() -> gamepad.right_bumper)
@@ -68,30 +70,39 @@ public class Robot {
                     outtake.stop.schedule();
                     intake.stop.schedule();
                 }).whenTrue(() -> {
-                    if(outtake.getTopRPM() > 1400) {
+                    if(outtake.getTopRPM() > 1200) {
                         intake.start.schedule();
                     }
                 });
 
-//        Button toggleAlign = button(() -> gamepad.right_bumper)
-//                .whenBecomesTrue(() -> align = true)
-//                .whenBecomesFalse(() -> {
-//                    align = false;
-//                    lastHeadingError = 0;
-//                });
-
+        Button toggleAlign = button(() -> gamepad.left_trigger > 0.4)
+                .whenBecomesTrue(() -> align = true)
+                .whenBecomesFalse(() -> {
+                    align = false;
+                    lastHeadingError = 0;
+                });
 
         Button zeroPose = button(() -> gamepad.a)
                 .whenBecomesTrue(() -> follower.setPose(new Pose(0, 0, 0)));
+
     }
 
 
 
     public void periodic() {
-        if(!Objects.isNull(LimeLight.getRobotPose())) {
-            follower.setPose(LimeLight.getRobotPose());
-        }
+        Pose limelightPose = LimeLight.getRobotPose();
 
+        if(limelightPose != null) {
+            Pose currentPose = follower.getPose();
+            double distanceJump = Math.hypot(
+                    limelightPose.getX() - currentPose.getX(),
+                    limelightPose.getY() - currentPose.getY()
+            );
+
+            if(distanceJump < 24) {
+                follower.setPose(limelightPose);
+            }
+        }
 
         if(!Outtake.isBusy) {
             outtake.topMotor.setPower(0.4);
