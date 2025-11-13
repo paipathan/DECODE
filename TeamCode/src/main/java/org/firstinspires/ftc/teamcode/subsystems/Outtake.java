@@ -1,82 +1,55 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static dev.nextftc.bindings.Bindings.button;
-
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import java.time.Duration;
 
-import dev.nextftc.bindings.Button;
-import dev.nextftc.core.commands.delays.Delay;
-import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
-import dev.nextftc.core.components.SubsystemComponent;
 
 public class Outtake {
-//    private DcMotor topMotor;
-    private DcMotor bottomMotor;
-    private DcMotor topMotor;
-    private Servo hood;
-    private double hoodPose;
+    public final DcMotorEx topMotor;
+    public final DcMotorEx bottomMotor;
 
     public InstantCommand shoot;
     public InstantCommand stop;
-    public InstantCommand hoodUp;
-    public InstantCommand hoodDown;
-    public Outtake(HardwareMap hwMap, Gamepad gamepad) {
-        topMotor = hwMap.get(DcMotor.class, "topOuttakeMotor");
+
+    public static boolean isBusy = false;
+
+    public Outtake(HardwareMap hwMap) {
+        topMotor = hwMap.get(DcMotorEx.class, "topOuttakeMotor");
         topMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         topMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         topMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        bottomMotor = hwMap.get(DcMotor.class, "bottomOuttakeMotor");
+        bottomMotor = hwMap.get(DcMotorEx.class, "bottomOuttakeMotor");
         bottomMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        bottomMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        bottomMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         bottomMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        hood = hwMap.get(Servo.class, "hoodServo");
-        hoodPose = 0;
+
+        Servo hood = hwMap.get(Servo.class, "hoodServo");
         hood.setDirection(Servo.Direction.REVERSE);
 
 
         shoot = new InstantCommand(() -> {
-            bottomMotor.setPower(0.25);
             topMotor.setPower(1);
-            gamepad.rumble(1, 1, Gamepad.RUMBLE_DURATION_CONTINUOUS);
+            bottomMotor.setPower(-1);
+
+            isBusy = true;
         });
 
         stop = new InstantCommand(() -> {
-            bottomMotor.setPower(0);
             topMotor.setPower(0);
-            gamepad.stopRumble();
+            bottomMotor.setPower(0);
+
+            isBusy = false;
         });
-
-        hoodUp = new InstantCommand(() -> {
-            hoodPose+=0.1;
-            hood.setPosition(hoodPose);
-        });
-
-        hoodDown = new InstantCommand(() -> {
-            hoodPose-=0.1;
-            hood.setPosition(hoodPose);
-        });
-
-        Button rb = button(() -> gamepad.right_bumper)
-                .whenBecomesTrue(shoot::schedule)
-                .whenBecomesFalse(stop::schedule);
-
-        Button dpad_up = button(() -> gamepad.dpad_up)
-                .whenBecomesTrue(hoodUp::schedule);
-
-        Button dpad_down = button(() -> gamepad.dpad_down)
-                .whenBecomesTrue(hoodDown::schedule);
     }
 
-
-    public static void loop() {}
+    public double getTopRPM() {
+        return topMotor.getVelocity();
+    }
 }
