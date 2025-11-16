@@ -20,6 +20,9 @@ public class Outtake {
 
     public InstantCommand start;
     public InstantCommand stop;
+
+    public InstantCommand autoStart;
+
     public final static double MIN = 0.3006;
     public final static double MAX = 1;
 
@@ -48,6 +51,10 @@ public class Outtake {
             bottomMotor.setPower(-1);
 
             isBusy = true;
+        });
+
+        autoStart = new InstantCommand(() -> {
+
         });
 
         stop = new InstantCommand(() -> {

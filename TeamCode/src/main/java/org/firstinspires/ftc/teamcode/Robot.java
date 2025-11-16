@@ -25,6 +25,7 @@ import dev.nextftc.bindings.BindingManager;
 import dev.nextftc.bindings.Button;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.CommandManager;
+import dev.nextftc.core.commands.utility.InstantCommand;
 
 public class Robot {
 
@@ -38,6 +39,8 @@ public class Robot {
     private final Pose targetPosition;
     private double lastHeadingError = 0;
 
+    public InstantCommand autoIntake;
+    public InstantCommand autoIntakeStop;
 
     public Robot(HardwareMap hwMap, Alliance alliance, Gamepad gamepad) {
         this.gamepad = gamepad;
@@ -45,9 +48,25 @@ public class Robot {
         outtake = new Outtake(hwMap);
         follower = Constants.createFollower(hwMap);
 
+        autoIntake = new InstantCommand(() -> {
+            intake.start.schedule();
+            outtake.bottomMotor.setPower(0.5);
+        });
+
+        autoIntakeStop = new InstantCommand(() -> {
+            intake.stop.schedule();
+            outtake.bottomMotor.setPower(0);
+        });
+
+
+
+
+
+
         this.alliance = alliance;
 //        LimeLight.init(hwMap);
 
+        follower.update();
         follower.startTeleopDrive(true);
 
         targetPosition = alliance == Alliance.BLUE ? new Pose(0, 144) : new Pose(0, 144).mirror();
@@ -153,5 +172,8 @@ public class Robot {
         if (value > max) return max;
         return value;
     }
+
+
+
 
 }

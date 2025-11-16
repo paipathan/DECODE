@@ -30,8 +30,32 @@ public class Far6Blue extends LinearOpMode {
         robot.follower.setStartingPose(new Pose(57, 9, Math.toRadians(90)));
         CommandManager.INSTANCE.cancelAll();
 
+
+
         SequentialGroup autoRoutine = new SequentialGroup(
-                robot.followPath(paths.shootPreload, 1)
+                robot.outtake.start,
+                robot.followPath(paths.shootPreload, 1),
+                new Delay(2),
+                robot.intake.start,
+                new Delay(5),
+                robot.outtake.stop,
+                robot.intake.stop,
+                robot.autoIntake,
+                robot.followPath(paths.alignIntake1, 0.75),
+                robot.followPath(paths.intake1, 0.5),
+                new Delay(1),
+                robot.autoIntakeStop,
+                robot.followPath(paths.shoot2, 1),
+                robot.outtake.start,
+                new Delay(2),
+                robot.intake.start,
+                new Delay(5),
+                robot.outtake.stop,
+                robot.intake.stop
+         );
+
+        SequentialGroup shootingTest = new SequentialGroup(
+                robot.outtake.start
         );
 
 
@@ -45,6 +69,8 @@ public class Far6Blue extends LinearOpMode {
 
             telemetry.addData("Current path chain: ", robot.follower.getCurrentPathChain());
             telemetry.update();
+
+
 
             Drawing.init();
             Drawing.drawRobot(robot.follower.getPose());
@@ -62,33 +88,34 @@ public class Far6Blue extends LinearOpMode {
 
 
         public Paths(Follower follower) {
-
-            PathBuilder pathBuilder = new PathBuilder(follower, Constants.pathConstraints);
-
-            shootPreload = pathBuilder
+            shootPreload = follower
+                    .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(57.000, 9.000), new Pose(72.000, 72.000))
+                            new BezierLine(new Pose(57.000, 9.000), new Pose(53.000, 90.000))
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(133))
                     .build();
 
-            alignIntake1 = pathBuilder
+            alignIntake1 = follower
+                    .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(72.000, 72.000), new Pose(45.600, 83.800))
+                            new BezierLine(new Pose(53.000, 90.000), new Pose(53.000, 83.800))
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(133), Math.toRadians(180))
                     .build();
 
-            intake1 = pathBuilder
+            intake1 = follower
+                    .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(45.600, 83.800), new Pose(17.500, 83.800))
+                            new BezierLine(new Pose(53.000, 83.800), new Pose(17.500, 83.800))
                     )
                     .setConstantHeadingInterpolation(Math.toRadians(180))
                     .build();
 
-            shoot2 = pathBuilder
+            shoot2 = follower
+                    .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(17.500, 83.800), new Pose(72.000, 72.000))
+                            new BezierLine(new Pose(17.500, 83.800), new Pose(53.000, 90.000))
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(133))
                     .build();
