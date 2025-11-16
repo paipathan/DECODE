@@ -53,9 +53,6 @@ public class Outtake {
             isBusy = true;
         });
 
-        autoStart = new InstantCommand(() -> {
-
-        });
 
         stop = new InstantCommand(() -> {
             topMotor.setPower(0);
@@ -68,7 +65,7 @@ public class Outtake {
     }
 
     public double getTopRPM() {
-        return topMotor.getVelocity(AngleUnit.DEGREES) * 60;
+        return topMotor.getVelocity();
     }
 
     private void configureLUT() {

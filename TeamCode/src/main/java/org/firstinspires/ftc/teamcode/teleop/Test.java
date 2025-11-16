@@ -33,7 +33,7 @@ public class Test extends LinearOpMode {
             telemetry.addData("[ODO] Pose y", robot.follower.getPose().getY());
             telemetry.addData("[ODO] Heading", robot.follower.getPose().getHeading());
 
-            telemetry.addData("[SHOOTER] RPM", robot.outtake.topMotor.getVelocity());
+            telemetry.addData("[SHOOTER] RPM", robot.outtake.getTopRPM());
             telemetry.addData("[HOOD] Tick: ", robot.outtake.hood.getPosition());
             telemetry.update();
 

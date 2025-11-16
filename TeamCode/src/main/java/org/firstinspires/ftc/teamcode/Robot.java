@@ -92,7 +92,7 @@ public class Robot {
                     outtake.stop.schedule();
                     intake.stop.schedule();
                 }).whenTrue(() -> {
-                    if(outtake.getTopRPM() > 1200) {
+                    if(outtake.getTopRPM() > 1300) {
                         intake.start.schedule();
                     }
                 });
@@ -116,6 +116,9 @@ public class Robot {
                 .whenTrue(() -> {
                     outtake.hood.setPosition(clamp(outtake.hood.getPosition() - 0.01, Outtake.MIN, Outtake.MAX));
                 });
+
+        Button bigRedOhShitButton = button(() -> gamepad.b)
+                .whenBecomesTrue(CommandManager.INSTANCE::cancelAll);
     }
 
 
