@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.Robot;
 
 import java.util.Objects;
 
+import dev.nextftc.core.commands.CommandManager;
+
 
 @TeleOp(name="Test TeleOp", group="TeleOp")
 public class Test extends LinearOpMode {
@@ -17,6 +19,7 @@ public class Test extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Robot robot = new Robot(hardwareMap, Alliance.BLUE, gamepad1);
+        CommandManager.INSTANCE.cancelAll();
 
         waitForStart();
         while(opModeIsActive()) {

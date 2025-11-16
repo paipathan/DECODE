@@ -25,9 +25,7 @@ public class FollowPath extends Command {
     }
 
     @Override
-    public void update() {
-        follower.update();
-    }
+    public void update() {}
 
     @Override
     public boolean isDone() {

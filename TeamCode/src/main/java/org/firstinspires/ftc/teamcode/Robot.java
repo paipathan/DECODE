@@ -12,7 +12,6 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.commands.FollowPath;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
@@ -49,7 +48,6 @@ public class Robot {
         this.alliance = alliance;
 //        LimeLight.init(hwMap);
 
-        follower.update();
         follower.startTeleopDrive(true);
 
         targetPosition = alliance == Alliance.BLUE ? new Pose(0, 144) : new Pose(0, 144).mirror();
