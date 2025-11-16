@@ -12,6 +12,8 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.commands.FollowPath;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -31,6 +33,7 @@ public class Robot {
     public final Outtake outtake;
     public Follower follower;
     public Gamepad gamepad;
+    public Alliance alliance;
 
     private boolean align = false;
     private final Pose targetPosition;
@@ -42,7 +45,9 @@ public class Robot {
         intake = new Intake(hwMap);
         outtake = new Outtake(hwMap);
         follower = Constants.createFollower(hwMap);
-        LimeLight.init(hwMap);
+
+        this.alliance = alliance;
+//        LimeLight.init(hwMap);
 
         follower.update();
         follower.startTeleopDrive(true);
@@ -64,7 +69,7 @@ public class Robot {
 
         Button toggleOuttake = button(() -> gamepad.right_bumper)
                 .whenBecomesTrue(() -> {
-                    outtake.shoot.schedule();
+                    outtake.start.schedule();
                 })
                 .whenBecomesFalse(() -> {
                     outtake.stop.schedule();
@@ -85,24 +90,25 @@ public class Robot {
         Button zeroPose = button(() -> gamepad.a)
                 .whenBecomesTrue(() -> follower.setPose(new Pose(0, 0, 0)));
 
+        Button dpadUp = button(() -> gamepad.dpad_up)
+                .whenTrue(() -> {
+                    outtake.hood.setPosition(clamp(outtake.hood.getPosition() + 0.01, Outtake.MIN, Outtake.MAX));
+                });
+
+        Button dpadDown = button(() -> gamepad.dpad_down)
+                .whenTrue(() -> {
+                    outtake.hood.setPosition(clamp(outtake.hood.getPosition() - 0.01, Outtake.MIN, Outtake.MAX));
+                });
     }
 
 
 
     public void periodic() {
-        Pose limelightPose = LimeLight.getRobotPose();
+//        Pose limelightPose = LimeLight.getRobotPose();
 
-        if(limelightPose != null) {
-            Pose currentPose = follower.getPose();
-            double distanceJump = Math.hypot(
-                    limelightPose.getX() - currentPose.getX(),
-                    limelightPose.getY() - currentPose.getY()
-            );
-
-            if(distanceJump < 24) {
-                follower.setPose(limelightPose);
-            }
-        }
+//        if(limelightPose != null) {
+//            follower.setPose(limelightPose);
+//        }
 
         if(!Outtake.isBusy) {
             outtake.topMotor.setPower(0.4);
@@ -143,4 +149,11 @@ public class Robot {
         while (angle < -Math.PI) angle += 2 * Math.PI;
         return angle;
     }
+
+    public static double clamp(double value, double min, double max) {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+    }
+
 }

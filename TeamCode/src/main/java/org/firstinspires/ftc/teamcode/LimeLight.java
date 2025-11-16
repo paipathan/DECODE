@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.pedropathing.ftc.FTCCoordinates;
+import com.pedropathing.ftc.InvertedFTCCoordinates;
 import com.pedropathing.geometry.PedroCoordinates;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
 import java.util.Objects;
@@ -14,11 +17,15 @@ import java.util.Objects;
 public class LimeLight {
 
     private static Limelight3A ll;
+    private static IMU imu;
 
     public static void init(HardwareMap hwMap) {
         ll = hwMap.get(Limelight3A.class, "limelight");
+        ll.pipelineSwitch(0);
         ll.setPollRateHz(100);
         ll.start();
+
+        imu = hwMap.get(IMU.class, "imu");
     }
 
     public static boolean getRunning() {
@@ -33,16 +40,18 @@ public class LimeLight {
         return ll.getLatestResult().isValid();
     }
 
-    public static double[] getTValues() {
-        if(ll.getLatestResult().isValid()) {
-            return new double[] {
-                    ll.getLatestResult().getTx(),
-                    ll.getLatestResult().getTy(),
-                    ll.getLatestResult().getTa()
-            };
-        }
-        return null;
+    public static double getTX() {
+        return ll.getLatestResult().getTx();
     }
+
+    public static double getTY() {
+        return ll.getLatestResult().getTy();
+    }
+
+    public static double getTA() {
+        return ll.getLatestResult().getTa();
+    }
+
 
     public static Pose getRobotPose() {
         LLResult result = ll.getLatestResult();
@@ -56,16 +65,15 @@ public class LimeLight {
         double yMeters = botPose.getPosition().y;
         double yawDegrees = botPose.getOrientation().getYaw();
 
-        double xInches = (xMeters * 39.3701);
-        double yInches = (yMeters * 39.3701);
-        double headingRadians = Math.toRadians(yawDegrees);
+        double xInches = (xMeters * 39.3701) + 72;
+        double yInches = (yMeters * 39.3701) + 72;
+        double headingRadians = Math.toRadians(yawDegrees - 90);
 
         return new Pose(
                 xInches,
                 yInches,
-                headingRadians,
-                FTCCoordinates.INSTANCE
-        ).getAsCoordinateSystem(PedroCoordinates.INSTANCE);
+                headingRadians
+        );
     }
 
 
