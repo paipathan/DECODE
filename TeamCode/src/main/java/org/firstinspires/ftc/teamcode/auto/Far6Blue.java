@@ -61,20 +61,11 @@ public class Far6Blue extends LinearOpMode {
                 robot.followPath(paths.intake1, 0.5),
                 new Delay(1),
                 robot.autoIntakeStop,
-                robot.followPath(paths.shoot2, .5),
+                robot.followPath(paths.shoot2, 0.5),
                 shootOneArtifact,
                 shootOneArtifact,
                 shootOneArtifact
          );
-
-
-        SequentialGroup tet = new SequentialGroup(
-
-                shootOneArtifact,
-                shootOneArtifact,
-                shootOneArtifact
-
-        );
 
         waitForStart();
         autoRoutine.schedule();
