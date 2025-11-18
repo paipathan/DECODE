@@ -38,55 +38,27 @@ public class Far6Blue extends LinearOpMode {
         CommandManager.INSTANCE.cancelAll();
 
 
-        SequentialGroup shootOneArtifact = new SequentialGroup(
-                robot.outtake.start,
-                new WaitUntil(() -> robot.outtake.getTopRPM() >= 1200),
-                robot.intake.start,
-                new InstantCommand(timer::reset),
-                new WaitUntil(() -> robot.outtake.getTopRPM() < 1000 || timer.time() > 3),
-                robot.intake.stop,
-                robot.outtake.stop
-        );
-
-
-
-
         SequentialGroup autoRoutine = new SequentialGroup(
                 robot.followPath(paths.shootPreload, 1),
-                shootOneArtifact,
-                shootOneArtifact,
-                shootOneArtifact,
+                robot.shootArtifact(3),
                 robot.autoIntake,
                 robot.followPath(paths.alignIntake1, 0.75),
                 robot.followPath(paths.intake1, 0.5),
                 new Delay(1),
                 robot.autoIntakeStop,
-                robot.followPath(paths.shoot2, 1),
-                shootOneArtifact,
-                shootOneArtifact,
-                shootOneArtifact
-         );
-
-
-        SequentialGroup tet = new SequentialGroup(
-
-                shootOneArtifact,
-                shootOneArtifact,
-                shootOneArtifact
-
+                robot.followPath(paths.shoot2, 0.5),
+                robot.shootArtifact(3)
         );
 
+        robot.autoIntake.schedule();
         waitForStart();
-        autoRoutine.schedule();
 
         while(opModeIsActive()) {
             robot.follower.update();
             CommandManager.INSTANCE.run();
 
-            telemetry.addData("Current path chain: ", robot.follower.getCurrentPathChain());
             telemetry.addData("RPM: ", robot.outtake.getTopRPM());
             telemetry.update();
-
 
             Drawing.init();
             Drawing.drawRobot(robot.follower.getPose());
@@ -108,23 +80,23 @@ public class Far6Blue extends LinearOpMode {
             PathConstraints pathConstraints = new PathConstraints(0.995, 0.1, 0.1, 0.007, 100, 0.9, 10, 1);
 
             shootPreload = follower
-                    .pathBuilder()
+                    .pathBuilder().setConstraints(pathConstraints)
                     .addPath(
                             new BezierLine(new Pose(57.000, 9.000), new Pose(61.000, 83.000))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(130))
+                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(133))
                     .build();
 
             alignIntake1 = follower
-                    .pathBuilder()
+                    .pathBuilder().setConstraints(pathConstraints)
                     .addPath(
                             new BezierLine(new Pose(61.000, 83.000), new Pose(45.600, 83.800))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(130), Math.toRadians(180))
+                    .setLinearHeadingInterpolation(Math.toRadians(133), Math.toRadians(180))
                     .build();
 
             intake1 = follower
-                    .pathBuilder()
+                    .pathBuilder().setConstraints(pathConstraints)
                     .addPath(
                             new BezierLine(new Pose(45.600, 83.800), new Pose(13.400, 83.800))
                     )
@@ -132,11 +104,11 @@ public class Far6Blue extends LinearOpMode {
                     .build();
 
             shoot2 = follower
-                    .pathBuilder()
+                    .pathBuilder().setConstraints(pathConstraints)
                     .addPath(
                             new BezierLine(new Pose(13.400, 83.800), new Pose(61.000, 83.000))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(130))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(133))
                     .build();
         }
     }

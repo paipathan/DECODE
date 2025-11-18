@@ -32,34 +32,19 @@ public class Near6Blue extends LinearOpMode {
         paths = new Paths(robot.follower);
         timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
 
-        robot.follower.setStartingPose(new Pose(25.876312718786465, 130.389731621937, Math.toRadians(144)));
+        robot.follower.setStartingPose(new Pose(37.6, 134.4, Math.toRadians(90)));
         CommandManager.INSTANCE.cancelAll();
 
 
-        SequentialGroup shootOneArtifact = new SequentialGroup(
-                robot.outtake.start,
-                new WaitUntil(() -> robot.outtake.getTopRPM() >= 1200),
-                robot.intake.start,
-                new InstantCommand(timer::reset),
-                new WaitUntil(() -> robot.outtake.getTopRPM() < 1000 || timer.time() > 3),
-                robot.intake.stop,
-                robot.outtake.stop
-        );
-
         SequentialGroup autoRoutine = new SequentialGroup(
                 robot.followPath(paths.shootPreload, 0.75),
-                shootOneArtifact,
-                shootOneArtifact,
-                shootOneArtifact,
+                robot.shootArtifact(3),
                 robot.autoIntake,
-                robot.followPath(paths.alignIntake, 0.75),
+                robot.followPath(paths.alignIntake1, 0.75),
                 robot.followPath(paths.intake1, 0.5),
-                new Delay(1),
                 robot.autoIntakeStop,
                 robot.followPath(paths.shoot2, 0.75),
-                shootOneArtifact,
-                shootOneArtifact,
-                shootOneArtifact
+                robot.shootArtifact(3)
         );
 
         waitForStart();
@@ -69,7 +54,6 @@ public class Near6Blue extends LinearOpMode {
             robot.follower.update();
             CommandManager.INSTANCE.run();
 
-            telemetry.addData("Current path chain: ", robot.follower.getCurrentPathChain());
             telemetry.addData("RPM: ", robot.outtake.getTopRPM());
             telemetry.update();
 
@@ -81,17 +65,11 @@ public class Near6Blue extends LinearOpMode {
         }
     }
 
-    /*private SequentialGroup shoot(int shots){
-        SequentialGroup group = new SequentialGroup();
-        for (int i = 0; i < shots; i++){
-            
-        }
-    }*/
 
     public static class Paths {
 
         public PathChain shootPreload;
-        public PathChain alignIntake;
+        public PathChain alignIntake1;
         public PathChain intake1;
         public PathChain shoot2;
 
@@ -102,17 +80,17 @@ public class Near6Blue extends LinearOpMode {
             shootPreload = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(25.876312718786465, 130.389731621937), new Pose(44.359, 115.603))
+                            new BezierLine(new Pose(37.600, 134.400), new Pose(61.000, 83.000))
                     )
-                    .setConstantHeadingInterpolation(Math.toRadians(144))
+                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(130))
                     .build();
 
-            alignIntake = follower
+            alignIntake1 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(44.359, 115.603), new Pose(45.600, 83.800))
+                            new BezierLine(new Pose(61.000, 83.000), new Pose(45.600, 83.800))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(144), Math.toRadians(180))
+                    .setLinearHeadingInterpolation(Math.toRadians(130), Math.toRadians(180))
                     .build();
 
             intake1 = follower

@@ -11,14 +11,16 @@ import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 public class Intake {
-    private DcMotor intakeMotor;
+    private final DcMotor intakeMotor;
 
-    private CRServo leftIntakeServo;
-    private CRServo rightIntakeServo;
+    private final CRServo leftIntakeServo;
+    private final CRServo rightIntakeServo;
 
     public InstantCommand start;
     public InstantCommand stop;
     public InstantCommand reverse;
+
+    public static boolean isBusy = false;
 
     public Intake(HardwareMap hwMap) {
         intakeMotor = hwMap.get(DcMotor.class, "intakeMotor");
@@ -34,18 +36,24 @@ public class Intake {
             intakeMotor.setPower(1);
             leftIntakeServo.setPower(1);
             rightIntakeServo.setPower(1);
+
+            isBusy = true;
         });
 
         stop = new InstantCommand(()-> {
             intakeMotor.setPower(0);
             leftIntakeServo.setPower(0);
             rightIntakeServo.setPower(0);
+
+            isBusy = false;
         });
 
         reverse = new InstantCommand(()-> {
             intakeMotor.setPower(-1);
             leftIntakeServo.setPower(-1);
             rightIntakeServo.setPower(-1);
+
+            isBusy = true;
         });
     }
 }

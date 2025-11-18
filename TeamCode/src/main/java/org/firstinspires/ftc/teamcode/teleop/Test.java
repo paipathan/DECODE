@@ -25,10 +25,6 @@ public class Test extends LinearOpMode {
         while(opModeIsActive()) {
             robot.periodic();
 
-//            telemetry.addData("[LL] Connected: ", LimeLight.getConnected());
-//            telemetry.addData("[LL] Running: ", LimeLight.getRunning());
-//            telemetry.addData("[LL] Valid Result", LimeLight.validResult());
-
             telemetry.addData("[ODO] Pose x", robot.follower.getPose().getX());
             telemetry.addData("[ODO] Pose y", robot.follower.getPose().getY());
             telemetry.addData("[ODO] Heading", robot.follower.getPose().getHeading());

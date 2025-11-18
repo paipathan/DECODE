@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.commands.FollowPath;
+import org.firstinspires.ftc.teamcode.commands.ShootArtifact;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
@@ -58,13 +59,8 @@ public class Robot {
             outtake.bottomMotor.setPower(0);
         });
 
-
-
-
-
-
         this.alliance = alliance;
-//        LimeLight.init(hwMap);
+        LimeLight.init(hwMap);
 
         follower.update();
         follower.startTeleopDrive(true);
@@ -92,8 +88,10 @@ public class Robot {
                     outtake.stop.schedule();
                     intake.stop.schedule();
                 }).whenTrue(() -> {
-                    if(outtake.getTopRPM() > 1300) {
+                    if(outtake.getTopRPM() > 1200 && !Intake.isBusy) {
                         intake.start.schedule();
+                    } else if(outtake.getTopRPM() < 1000 && Intake.isBusy) {
+                        intake.stop.schedule();
                     }
                 });
 
@@ -124,11 +122,11 @@ public class Robot {
 
 
     public void periodic() {
-//        Pose limelightPose = LimeLight.getRobotPose();
+        Pose limelightPose = LimeLight.getRobotPose();
 
-//        if(limelightPose != null) {
-//            follower.setPose(limelightPose);
-//        }
+        if(limelightPose != null) {
+            follower.setPose(limelightPose);
+        }
 
         if(!Outtake.isBusy) {
             outtake.topMotor.setPower(0.4);
@@ -142,6 +140,10 @@ public class Robot {
 
     public Command followPath(PathChain path, double maxPower) {
         return new FollowPath(path, this.follower, maxPower);
+    }
+
+    public Command shootArtifact(int shots) {
+        return new ShootArtifact(this, shots);
     }
 
     private void handleDrive(boolean align) {
