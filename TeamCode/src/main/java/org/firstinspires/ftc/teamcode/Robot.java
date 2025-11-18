@@ -44,6 +44,8 @@ public class Robot {
     public InstantCommand autoIntake;
     public InstantCommand autoIntakeStop;
 
+    private double headingError;
+
     public Robot(HardwareMap hwMap, Alliance alliance, Gamepad gamepad) {
         this.gamepad = gamepad;
         intake = new Intake(hwMap);
@@ -84,23 +86,21 @@ public class Robot {
         Button toggleOuttake = button(() -> gamepad.right_bumper)
                 .whenBecomesTrue(() -> {
                     outtake.start.schedule();
+                    align = true;
                 })
                 .whenBecomesFalse(() -> {
                     outtake.stop.schedule();
                     intake.stop.schedule();
-                }).whenTrue(() -> {
-                    if(outtake.getTopRPM() > 1200 && !Intake.isBusy) {
-                        intake.start.schedule();
-                    } else if(outtake.getTopRPM() < 1000 && Intake.isBusy) {
-                        intake.stop.schedule();
-                    }
-                });
-
-        Button toggleAlign = button(() -> gamepad.left_trigger > 0.4)
-                .whenBecomesTrue(() -> align = true)
-                .whenBecomesFalse(() -> {
                     align = false;
                     lastHeadingError = 0;
+                }).whenTrue(() -> {
+                    if(Math.abs(headingError) < 0.1) {
+                        if(outtake.getTopRPM() > 1200 && !Intake.isBusy) {
+                            intake.start.schedule();
+                        } else if(outtake.getTopRPM() < 1000 && Intake.isBusy) {
+                            intake.stop.schedule();
+                        }
+                    }
                 });
 
         Button zeroPose = button(() -> gamepad.a)
