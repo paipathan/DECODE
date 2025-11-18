@@ -42,15 +42,15 @@ public class Far6Blue extends LinearOpMode {
                 robot.followPath(paths.shootPreload, 1),
                 robot.shootArtifact(3),
                 robot.autoIntake,
-                robot.followPath(paths.alignIntake1, 0.75),
+                robot.followPath(paths.alignIntake1, 1),
                 robot.followPath(paths.intake1, 0.5),
                 new Delay(1),
                 robot.autoIntakeStop,
-                robot.followPath(paths.shoot2, 0.5),
+                robot.followPath(paths.shoot2, 1),
                 robot.shootArtifact(3)
         );
 
-        robot.autoIntake.schedule();
+        autoRoutine.schedule();
         waitForStart();
 
         while(opModeIsActive()) {

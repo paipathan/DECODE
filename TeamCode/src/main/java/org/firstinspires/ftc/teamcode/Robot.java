@@ -37,6 +37,7 @@ public class Robot {
     public Alliance alliance;
 
     private boolean align = false;
+    private boolean robotCentric = false;
     private final Pose targetPosition;
     private double lastHeadingError = 0;
 
@@ -148,7 +149,7 @@ public class Robot {
 
     private void handleDrive(boolean align) {
         if (!align) {
-            follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, -gamepad.right_stick_x, true);
+            follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, -gamepad.right_stick_x, robotCentric);
             return;
         }
 
@@ -163,7 +164,12 @@ public class Robot {
 
         double rotationPower = Math.max(-1, Math.min(1, (headingError * 2.0) + (headingErrorDerivative * 0.1)));
 
-        follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, rotationPower, true);
+        follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, rotationPower, robotCentric);
+    }
+
+    public void handleDrive(){
+        follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, -gamepad.right_stick_x, robotCentric);
+        return;
     }
 
     private double normalizeAngle(double angle) {
@@ -177,8 +183,4 @@ public class Robot {
         if (value > max) return max;
         return value;
     }
-
-
-
-
 }
