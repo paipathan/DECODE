@@ -61,7 +61,7 @@ public class LimeLight {
 
         Pose3D botPose = result.getBotpose();
 
-        double xMeters = botPose.getPosition().x;
+        double xMeters = -botPose.getPosition().x;
         double yMeters = botPose.getPosition().y;
         double yawDegrees = botPose.getOrientation().getYaw();
 
@@ -70,8 +70,8 @@ public class LimeLight {
         double headingRadians = Math.toRadians(yawDegrees - 90);
 
         return new Pose(
-                xInches,
                 yInches,
+                xInches,
                 headingRadians
         );
     }
