@@ -9,15 +9,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Alliance;
-import org.firstinspires.ftc.teamcode.Drawing;
+import org.firstinspires.ftc.teamcode.util.Alliance;
+import org.firstinspires.ftc.teamcode.util.Drawing;
 import org.firstinspires.ftc.teamcode.Robot;
 
 import dev.nextftc.core.commands.CommandManager;
-import dev.nextftc.core.commands.delays.Delay;
-import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
-import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Autonomous(name="[BLUE] Near 6", group="Auto")
 public class Near6Blue extends LinearOpMode {
@@ -47,8 +44,9 @@ public class Near6Blue extends LinearOpMode {
                 robot.shootArtifact(3)
         );
 
-        waitForStart();
+        Robot.endPose = new Pose(61, 83, Math.toRadians(133));
         autoRoutine.schedule();
+        waitForStart();
 
         while (opModeIsActive()) {
             robot.follower.update();
@@ -82,7 +80,7 @@ public class Near6Blue extends LinearOpMode {
                     .addPath(
                             new BezierLine(new Pose(37.600, 134.400), new Pose(61.000, 83.000))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(130))
+                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(133))
                     .build();
 
             alignIntake1 = follower
@@ -90,7 +88,7 @@ public class Near6Blue extends LinearOpMode {
                     .addPath(
                             new BezierLine(new Pose(61.000, 83.000), new Pose(45.600, 83.800))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(130), Math.toRadians(180))
+                    .setLinearHeadingInterpolation(Math.toRadians(133), Math.toRadians(180))
                     .build();
 
             intake1 = follower
@@ -106,7 +104,7 @@ public class Near6Blue extends LinearOpMode {
                     .addPath(
                             new BezierLine(new Pose(13.400, 83.800), new Pose(61.000, 83.000))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(130))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(133))
                     .build();
 
         }

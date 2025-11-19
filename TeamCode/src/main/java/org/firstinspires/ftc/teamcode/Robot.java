@@ -2,25 +2,18 @@ package org.firstinspires.ftc.teamcode;
 
 import static dev.nextftc.bindings.Bindings.button;
 
-import com.bylazar.telemetry.TelemetryManager;
-import com.pedropathing.control.LowPassFilter;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.CoordinateSystem;
-import com.pedropathing.geometry.PedroCoordinates;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.commands.FollowPath;
 import org.firstinspires.ftc.teamcode.commands.ShootArtifact;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
-import org.opencv.video.KalmanFilter;
-
-import java.util.Objects;
+import org.firstinspires.ftc.teamcode.util.Alliance;
 
 import dev.nextftc.bindings.BindingManager;
 import dev.nextftc.bindings.Button;
@@ -33,18 +26,21 @@ public class Robot {
     public final Intake intake;
     public final Outtake outtake;
     public Follower follower;
+
     public Gamepad gamepad;
     public Alliance alliance;
 
     private boolean align = false;
-    private boolean robotCentric = false;
     private final Pose targetPosition;
     private double lastHeadingError = 0;
+    private double headingError = 0;
 
     public InstantCommand autoIntake;
     public InstantCommand autoIntakeStop;
 
-    private double headingError;
+    public static Pose endPose;
+    private boolean endPoseSet = false;
+
 
     public Robot(HardwareMap hwMap, Alliance alliance, Gamepad gamepad) {
         this.gamepad = gamepad;
@@ -123,6 +119,11 @@ public class Robot {
 
 
     public void periodic() {
+        if(endPose != null && !endPoseSet) {
+            follower.setPose(endPose);
+            endPoseSet = true;
+        }
+
         Pose limelightPose = LimeLight.getRobotPose();
 
         if(limelightPose != null) {
@@ -149,7 +150,8 @@ public class Robot {
 
     private void handleDrive(boolean align) {
         if (!align) {
-            follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, -gamepad.right_stick_x, robotCentric);
+            this.headingError = 0;
+            follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, -gamepad.right_stick_x, true);
             return;
         }
 
@@ -158,18 +160,13 @@ public class Robot {
         double deltaY = targetPosition.getY() - currentPose.getY();
         double targetHeading = Math.atan2(deltaY, deltaX);
 
-        double headingError = normalizeAngle(targetHeading - currentPose.getHeading());
-        double headingErrorDerivative = normalizeAngle(headingError - lastHeadingError);
-        lastHeadingError = headingError;
+        this.headingError = normalizeAngle(targetHeading - currentPose.getHeading());
+        double headingErrorDerivative = normalizeAngle(this.headingError - lastHeadingError);
+        lastHeadingError = this.headingError;
 
-        double rotationPower = Math.max(-1, Math.min(1, (headingError * 2.0) + (headingErrorDerivative * 0.1)));
+        double rotationPower = Math.max(-1, Math.min(1, (this.headingError * 2.0) + (headingErrorDerivative * 0.1)));
 
-        follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, rotationPower, robotCentric);
-    }
-
-    public void handleDrive(){
-        follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, -gamepad.right_stick_x, robotCentric);
-        return;
+        follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, rotationPower, true);
     }
 
     private double normalizeAngle(double angle) {
@@ -183,4 +180,8 @@ public class Robot {
         if (value > max) return max;
         return value;
     }
+
+
+
+
 }

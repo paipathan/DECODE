@@ -1,19 +1,15 @@
 package org.firstinspires.ftc.teamcode.teleop;
-import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Alliance;
-import org.firstinspires.ftc.teamcode.Drawing;
-import org.firstinspires.ftc.teamcode.LimeLight;
+import org.firstinspires.ftc.teamcode.util.Alliance;
+import org.firstinspires.ftc.teamcode.util.Drawing;
 import org.firstinspires.ftc.teamcode.Robot;
-
-import java.util.Objects;
 
 import dev.nextftc.core.commands.CommandManager;
 
 
-@TeleOp(name="Test TeleOp", group="TeleOp")
+@TeleOp(name="BLUE TELEOP", group="TeleOp")
 public class Test extends LinearOpMode {
 
     @Override

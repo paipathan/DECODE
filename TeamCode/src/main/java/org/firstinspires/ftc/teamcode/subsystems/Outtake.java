@@ -34,7 +34,7 @@ public class Outtake {
 
     public Outtake(HardwareMap hwMap) {
         topMotor = hwMap.get(DcMotorEx.class, "topOuttakeMotor");
-        topMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        topMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         topMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         topMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -47,7 +47,7 @@ public class Outtake {
         hood.setDirection(Servo.Direction.REVERSE);
 
         start = new InstantCommand(() -> {
-            topMotor.setPower(1);
+            topMotor.setVelocity(1200);
             bottomMotor.setPower(-1);
 
             isBusy = true;
@@ -55,7 +55,7 @@ public class Outtake {
 
 
         stop = new InstantCommand(() -> {
-            topMotor.setPower(0);
+            topMotor.setVelocity(0);
             bottomMotor.setPower(0);
 
             isBusy = false;

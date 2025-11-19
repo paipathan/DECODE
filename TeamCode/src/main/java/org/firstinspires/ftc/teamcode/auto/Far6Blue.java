@@ -1,29 +1,21 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-import com.arcrobotics.ftclib.command.WaitUntilCommand;
-import com.bylazar.gamepad.PanelsGamepad;
-import com.bylazar.panels.Panels;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Alliance;
-import org.firstinspires.ftc.teamcode.Drawing;
+import org.firstinspires.ftc.teamcode.util.Alliance;
+import org.firstinspires.ftc.teamcode.util.Drawing;
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.commands.delays.Delay;
-import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
-import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Autonomous(name="[BLUE] Far 6", group="Auto")
 public class Far6Blue extends LinearOpMode {
@@ -42,14 +34,15 @@ public class Far6Blue extends LinearOpMode {
                 robot.followPath(paths.shootPreload, 1),
                 robot.shootArtifact(3),
                 robot.autoIntake,
-                robot.followPath(paths.alignIntake1, 1),
+                robot.followPath(paths.alignIntake1, 0.75),
                 robot.followPath(paths.intake1, 0.5),
                 new Delay(1),
                 robot.autoIntakeStop,
-                robot.followPath(paths.shoot2, 1),
+                robot.followPath(paths.shoot2, 0.5),
                 robot.shootArtifact(3)
         );
 
+        Robot.endPose = new Pose(61, 83, Math.toRadians(133));
         autoRoutine.schedule();
         waitForStart();
 
