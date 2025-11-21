@@ -40,14 +40,14 @@ public class Outtake {
 
         bottomMotor = hwMap.get(DcMotorEx.class, "bottomOuttakeMotor");
         bottomMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        bottomMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        bottomMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         bottomMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         hood = hwMap.get(Servo.class, "hoodServo");
         hood.setDirection(Servo.Direction.REVERSE);
 
         start = new InstantCommand(() -> {
-            topMotor.setVelocity(1200);
+            topMotor.setVelocity(1400);
             bottomMotor.setPower(-1);
 
             isBusy = true;
