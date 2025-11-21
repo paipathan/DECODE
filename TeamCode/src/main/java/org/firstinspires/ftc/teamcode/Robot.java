@@ -31,6 +31,7 @@ public class Robot {
     public Alliance alliance;
 
     private boolean align = false;
+    private boolean robotCentric = true;
     private final Pose targetPosition;
     private double lastHeadingError = 0;
     private double headingError = 0;
@@ -82,21 +83,25 @@ public class Robot {
         Button toggleOuttake = button(() -> gamepad.right_bumper)
                 .whenBecomesTrue(() -> {
                     outtake.start.schedule();
-                    align = true;
                 })
                 .whenBecomesFalse(() -> {
                     outtake.stop.schedule();
                     intake.stop.schedule();
-                    align = false;
-                    lastHeadingError = 0;
                 }).whenTrue(() -> {
-                    if(Math.abs(headingError) < 0.1) {
                         if(outtake.getTopRPM() > 1200 && !Intake.isBusy) {
                             intake.start.schedule();
                         } else if(outtake.getTopRPM() < 1000 && Intake.isBusy) {
                             intake.stop.schedule();
                         }
-                    }
+                });
+
+        Button alignToGoal = button(() -> gamepad.left_trigger > 0.4)
+                .whenBecomesTrue(() -> {
+                    align = true;
+                })
+                .whenBecomesFalse(() -> {
+                    align = false;
+                    lastHeadingError = 0;
                 });
 
         Button zeroPose = button(() -> gamepad.a)
@@ -117,7 +122,6 @@ public class Robot {
     }
 
 
-
     public void periodic() {
         if(endPose != null && !endPoseSet) {
             follower.setPose(endPose);
@@ -131,7 +135,7 @@ public class Robot {
         }
 
         if(!Outtake.isBusy) {
-            outtake.topMotor.setPower(0.4);
+            outtake.topMotor.setVelocity(500);
         }
 
         follower.update();
@@ -151,7 +155,7 @@ public class Robot {
     private void handleDrive(boolean align) {
         if (!align) {
             this.headingError = 0;
-            follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, -gamepad.right_stick_x, true);
+            follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, -gamepad.right_stick_x, robotCentric);
             return;
         }
 
@@ -166,7 +170,7 @@ public class Robot {
 
         double rotationPower = Math.max(-1, Math.min(1, (this.headingError * 2.0) + (headingErrorDerivative * 0.1)));
 
-        follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, rotationPower, true);
+        follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, rotationPower, robotCentric);
     }
 
     private double normalizeAngle(double angle) {

@@ -54,12 +54,12 @@ public class Constants {
 
 
     public static TwoWheelConstants twoWheelLocalizerConstants = new TwoWheelConstants()
-            .forwardPodY(3.95)
+            .forwardPodY(-3.95)
             .strafePodX(0)
-            .forwardEncoder_HardwareMapName("intakeMotor")
-            .forwardEncoderDirection(Encoder.FORWARD)
-            .strafeEncoder_HardwareMapName("frontLeft")
-            .strafeEncoderDirection(Encoder.REVERSE)
+            .forwardEncoder_HardwareMapName("frontLeft")
+            .forwardEncoderDirection(Encoder.REVERSE)
+            .strafeEncoder_HardwareMapName("intakeMotor")
+            .strafeEncoderDirection(Encoder.FORWARD)
             .IMU_HardwareMapName("imu")
             .IMU_Orientation(
                     new RevHubOrientationOnRobot(
