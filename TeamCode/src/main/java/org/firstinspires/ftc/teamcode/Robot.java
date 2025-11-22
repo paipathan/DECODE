@@ -5,6 +5,7 @@ import static dev.nextftc.bindings.Bindings.button;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
+import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -31,10 +32,12 @@ public class Robot {
     public Alliance alliance;
 
     private boolean align = false;
-    private boolean robotCentric = true;
+    private boolean robotCentric = false;
     private final Pose targetPosition;
     private double lastHeadingError = 0;
-    private double headingError = 0;
+
+    private double lastHeading = 0;
+
 
     public InstantCommand autoIntake;
     public InstantCommand autoIntakeStop;
@@ -88,9 +91,9 @@ public class Robot {
                     outtake.stop.schedule();
                     intake.stop.schedule();
                 }).whenTrue(() -> {
-                        if(outtake.getTopRPM() > 1200 && !Intake.isBusy) {
+                        if(outtake.getTopTPS() > 1200 && !Intake.isBusy) {
                             intake.start.schedule();
-                        } else if(outtake.getTopRPM() < 1000 && Intake.isBusy) {
+                        } else if(outtake.getTopTPS() < 1000 && Intake.isBusy) {
                             intake.stop.schedule();
                         }
                 });
@@ -118,24 +121,29 @@ public class Robot {
                 });
 
         Button bigRedOhShitButton = button(() -> gamepad.b)
-                .whenBecomesTrue(CommandManager.INSTANCE::cancelAll);
+                .whenBecomesTrue(() -> {
+                    outtake.reverse.schedule();
+                    intake.reverse.schedule();
+                }).whenBecomesFalse(() -> {
+                    outtake.stop.schedule();
+                    intake.stop.schedule();
+                });
     }
 
 
     public void periodic() {
-        if(endPose != null && !endPoseSet) {
+        if (endPose != null && !endPoseSet) {
             follower.setPose(endPose);
             endPoseSet = true;
         }
 
         Pose limelightPose = LimeLight.getRobotPose();
 
-        if(limelightPose != null) {
+        if (limelightPose != null && !align) {
             follower.setPose(limelightPose);
         }
-
         if(!Outtake.isBusy) {
-            outtake.topMotor.setVelocity(500);
+            outtake.topMotor.setPower(0.4);
         }
 
         follower.update();
@@ -152,25 +160,29 @@ public class Robot {
         return new ShootArtifact(this, shots);
     }
 
+
     private void handleDrive(boolean align) {
         if (!align) {
-            this.headingError = 0;
-            follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, -gamepad.right_stick_x, robotCentric);
+            follower.setTeleOpDrive(-gamepad.left_stick_y, gamepad.left_stick_x, gamepad.right_stick_x, robotCentric);
             return;
         }
 
-        Pose currentPose = follower.getPose();
-        double deltaX = targetPosition.getX() - currentPose.getX();
-        double deltaY = targetPosition.getY() - currentPose.getY();
-        double targetHeading = Math.atan2(deltaY, deltaX);
+        LLResult result = LimeLight.getLatestResult();
 
-        this.headingError = normalizeAngle(targetHeading - currentPose.getHeading());
-        double headingErrorDerivative = normalizeAngle(this.headingError - lastHeadingError);
-        lastHeadingError = this.headingError;
+        // If no valid target, just allow manual drive with no auto-rotation
+        if (result == null || !result.isValid()) {
+            follower.setTeleOpDrive(-gamepad.left_stick_y, gamepad.left_stick_x, gamepad.right_stick_x, robotCentric);
+            return;
+        }
 
-        double rotationPower = Math.max(-1, Math.min(1, (this.headingError * 2.0) + (headingErrorDerivative * 0.1)));
+        double tx = result.getTx();
+        double headingError = Math.toRadians(tx);
 
-        follower.setTeleOpDrive(-gamepad.left_stick_y, -gamepad.left_stick_x, rotationPower, robotCentric);
+        double kP = 0.8;
+        double rotationPower = kP * headingError;
+        rotationPower = Math.max(-0.5, Math.min(0.5, rotationPower));
+
+        follower.setTeleOpDrive(-gamepad.left_stick_y, gamepad.left_stick_x, rotationPower, robotCentric);
     }
 
     private double normalizeAngle(double angle) {

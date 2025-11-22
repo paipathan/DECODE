@@ -52,6 +52,12 @@ public class LimeLight {
         return ll.getLatestResult().getTa();
     }
 
+    public static LLResult getLatestResult() {
+        if (ll == null) {
+            return null;
+        }
+        return ll.getLatestResult();
+    }
 
     public static Pose getRobotPose() {
         LLResult result = ll.getLatestResult();

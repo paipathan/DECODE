@@ -8,11 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-
 import dev.nextftc.core.commands.utility.InstantCommand;
-import dev.nextftc.hardware.powerable.Powerable;
-import dev.nextftc.hardware.powerable.SetPower;
 
 public class Outtake {
     public final DcMotorEx topMotor;
@@ -20,6 +16,8 @@ public class Outtake {
 
     public InstantCommand start;
     public InstantCommand stop;
+    public InstantCommand reverse;
+
 
     public InstantCommand autoStart;
 
@@ -47,7 +45,7 @@ public class Outtake {
         hood.setDirection(Servo.Direction.REVERSE);
 
         start = new InstantCommand(() -> {
-            topMotor.setVelocity(1400);
+            topMotor.setPower(1);
             bottomMotor.setPower(-1);
 
             isBusy = true;
@@ -55,16 +53,23 @@ public class Outtake {
 
 
         stop = new InstantCommand(() -> {
-            topMotor.setVelocity(0);
+            topMotor.setPower(0);
             bottomMotor.setPower(0);
 
             isBusy = false;
         });
 
+        reverse = new InstantCommand(() -> {
+            topMotor.setPower(-1);
+            bottomMotor.setPower(1);
+
+            isBusy = true;
+        });
+
         configureLUT();
     }
 
-    public double getTopRPM() {
+    public double getTopTPS() {
         return topMotor.getVelocity();
     }
 
