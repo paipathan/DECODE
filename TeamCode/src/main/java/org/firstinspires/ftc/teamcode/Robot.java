@@ -91,9 +91,9 @@ public class Robot {
                     lastHeadingError = 0;
                 }).whenTrue(() -> {
                     if(Math.abs(headingError) < 0.1) {
-                        if(outtake.getTopRPM() > 1200 && !Intake.isBusy) {
+                        if(outtake.getTopTPS() > 1200 && !Intake.isBusy) {
                             intake.start.schedule();
-                        } else if(outtake.getTopRPM() < 1000 && Intake.isBusy) {
+                        } else if(outtake.getTopTPS() < 1000 && Intake.isBusy) {
                             intake.stop.schedule();
                         }
                     }

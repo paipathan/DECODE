@@ -52,7 +52,7 @@ public class Near6Blue extends LinearOpMode {
             robot.follower.update();
             CommandManager.INSTANCE.run();
 
-            telemetry.addData("RPM: ", robot.outtake.getTopRPM());
+            telemetry.addData("RPM: ", robot.outtake.getTopTPS());
             telemetry.update();
 
 

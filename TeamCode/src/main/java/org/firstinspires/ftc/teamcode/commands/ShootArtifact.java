@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -45,7 +44,7 @@ public class ShootArtifact extends Command {
                 break;
 
             case WAIT_FOR_SPINUP:
-                if (robot.outtake.getTopRPM() >= 1200) {
+                if (robot.outtake.getTopTPS() >= 1200) {
                     robot.intake.start.schedule();
                     timer.reset();
                     currentState = State.WAIT_FOR_SHOOT;
@@ -53,7 +52,7 @@ public class ShootArtifact extends Command {
                 break;
 
             case WAIT_FOR_SHOOT:
-                if (robot.outtake.getTopRPM() < 1000 || timer.time() > 3) {
+                if (robot.outtake.getTopTPS() < 1000 || timer.time() > 3) {
                     robot.intake.stop.schedule();
                     shotsFired++;
 
