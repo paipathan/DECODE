@@ -44,7 +44,7 @@ public class Near6Blue extends LinearOpMode {
                 robot.shootArtifact(3)
         );
 
-        Robot.endPose = new Pose(61, 83, Math.toRadians(133));
+        //Robot.endPose = new Pose(61, 83, Math.toRadians(133));
         autoRoutine.schedule();
         waitForStart();
 

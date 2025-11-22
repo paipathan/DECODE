@@ -32,7 +32,7 @@ public class Robot {
     public Alliance alliance;
 
     private boolean align = false;
-    private boolean robotCentric = false;
+    private boolean robotCentric = true;
     private final Pose targetPosition;
     private double lastHeadingError = 0;
 
@@ -66,7 +66,7 @@ public class Robot {
         LimeLight.init(hwMap);
 
         follower.update();
-        follower.startTeleopDrive(true);
+//        follower.startTeleopDrive(true);
 
         targetPosition = alliance == Alliance.BLUE ? new Pose(0, 144) : new Pose(0, 144).mirror();
         configureKeyBinds();
@@ -132,11 +132,6 @@ public class Robot {
 
 
     public void periodic() {
-        if (endPose != null && !endPoseSet) {
-            follower.setPose(endPose);
-            endPoseSet = true;
-        }
-
         Pose limelightPose = LimeLight.getRobotPose();
 
         if (limelightPose != null && !align) {
