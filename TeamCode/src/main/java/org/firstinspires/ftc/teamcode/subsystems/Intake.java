@@ -17,6 +17,7 @@ public class Intake {
     private final CRServo rightIntakeServo;
 
     public InstantCommand start;
+    public InstantCommand autoIntakeStart;
     public InstantCommand stop;
     public InstantCommand reverse;
 
@@ -38,6 +39,10 @@ public class Intake {
             rightIntakeServo.setPower(1);
 
             isBusy = true;
+        });
+
+        autoIntakeStart = new InstantCommand(() -> {
+            intakeMotor.setPower(0.4);
         });
 
         stop = new InstantCommand(()-> {
