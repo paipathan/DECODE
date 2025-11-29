@@ -65,7 +65,7 @@ public class Robot {
         LimeLight.init(hwMap);
 
         follower.update();
-        follower.startTeleopDrive(true);
+        // follower.startTeleopDrive(true);
 
         targetPosition = alliance == Alliance.BLUE ? new Pose(0, 144) : new Pose(0, 144).mirror();
         configureKeyBinds();
