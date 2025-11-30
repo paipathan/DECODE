@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.commands.FollowPath;
 import org.firstinspires.ftc.teamcode.commands.ShootArtifact;
+import org.firstinspires.ftc.teamcode.commands.ShootContinuous;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
@@ -39,7 +40,7 @@ public class Robot {
 
     private boolean align = false;
     private boolean robotCentric = true;
-    private final Pose targetPosition;
+    // private final Pose targetPosition;
     private double lastHeadingError = 0;
 
     public InstantCommand autoIntake;
@@ -61,8 +62,25 @@ public class Robot {
         follower.startTeleopDrive();
         follower.update();
 
-        targetPosition = alliance == Alliance.BLUE ? new Pose(0, 144) : new Pose(0, 144).mirror();
+        // targetPosition = alliance == Alliance.BLUE ? new Pose(0, 144) : new Pose(0, 144).mirror();
         configureKeyBinds();
+
+        autoIntake = new InstantCommand(() -> {
+            intake.start.schedule();
+            outtake.bottomMotor.setPower(0.5);
+        });
+
+        autoIntakeStop = new InstantCommand(() -> {
+            intake.stop.schedule();
+            outtake.bottomMotor.setPower(0);
+        });
+    }
+
+    public Robot(HardwareMap hwMap) {
+        intake = new Intake(hwMap);
+        outtake = new Outtake(hwMap);
+        follower = Constants.createFollower(hwMap);
+        follower.update();
 
         autoIntake = new InstantCommand(() -> {
             intake.start.schedule();
@@ -191,6 +209,14 @@ public class Robot {
 
     public Command followPath(PathChain path, double maxPower) {
         return new FollowPath(path, this.follower, maxPower);
+    }
+
+    public Command shootArtifact(int shots){
+        return new ShootArtifact(this, shots);
+    }
+
+    public Command shootContinuous(){
+        return new ShootContinuous(this);
     }
 
 

@@ -9,9 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Alliance;
 import org.firstinspires.ftc.teamcode.Drawing;
-import org.firstinspires.ftc.teamcode.AutonRobot;
+import org.firstinspires.ftc.teamcode.Robot;
 
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.commands.groups.SequentialGroup;
@@ -19,13 +18,13 @@ import dev.nextftc.core.commands.groups.SequentialGroup;
 @Autonomous(name="[BLUE] Near 6", group="Auto")
 public class Near6Blue extends LinearOpMode {
 
-        AutonRobot robot;
+    Robot robot;
     Paths paths;
     ElapsedTime timer;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new AutonRobot(hardwareMap);
+        robot = new Robot(hardwareMap);
         paths = new Paths(robot.follower);
         timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
         robot.follower.setStartingPose(new Pose(37.6, 134.4, Math.toRadians(90)));

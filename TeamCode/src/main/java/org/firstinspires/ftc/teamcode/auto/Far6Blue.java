@@ -1,23 +1,18 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
-import com.pedropathing.paths.PathConstraints;
-import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Alliance;
 import org.firstinspires.ftc.teamcode.Drawing;
-import org.firstinspires.ftc.teamcode.AutonRobot;
+import org.firstinspires.ftc.teamcode.Robot;
 
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.commands.delays.Delay;
-import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 
 @Autonomous(name="[BLUE] Far 6", group="Auto")
@@ -25,7 +20,7 @@ public class Far6Blue extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        AutonRobot robot = new AutonRobot(hardwareMap);
+        Robot robot = new Robot(hardwareMap);
         Paths paths = new Paths(robot.follower);
         ElapsedTime timer  = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
         robot.follower.setStartingPose(new Pose(56, 8, Math.toRadians(90)));

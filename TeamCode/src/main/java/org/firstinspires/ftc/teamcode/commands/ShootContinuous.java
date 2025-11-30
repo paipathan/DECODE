@@ -2,14 +2,12 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.AutonRobot;
 import org.firstinspires.ftc.teamcode.Robot;
 
 import dev.nextftc.core.commands.Command;
-import dev.nextftc.core.commands.delays.Delay;
 
 public class ShootContinuous extends Command {
-    private final AutonRobot robot;
+    private final Robot robot;
     private final ElapsedTime timer;
 
     private enum State {
@@ -23,7 +21,7 @@ public class ShootContinuous extends Command {
     private State currentState;
     private int shotsFired;
 
-    public ShootContinuous(AutonRobot robot) {
+    public ShootContinuous(Robot robot) {
         this.robot = robot;
         this.timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
         setInterruptible(true);
