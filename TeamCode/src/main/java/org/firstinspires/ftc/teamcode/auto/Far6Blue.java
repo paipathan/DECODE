@@ -26,7 +26,7 @@ public class Far6Blue extends LinearOpMode {
         Paths paths = new Paths(robot.follower);
         ElapsedTime timer  = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
 
-        robot.follower.setStartingPose(new Pose(57, 9, Math.toRadians(90)));
+        robot.follower.setStartingPose(new Pose(56, 8, Math.toRadians(90)));
         CommandManager.INSTANCE.cancelAll();
 
 
@@ -58,7 +58,6 @@ public class Far6Blue extends LinearOpMode {
             Drawing.sendPacket();
         }
     }
-
     public static class Paths {
 
         public PathChain shootPreload;
@@ -66,29 +65,25 @@ public class Far6Blue extends LinearOpMode {
         public PathChain intake1;
         public PathChain shoot2;
 
-
         public Paths(Follower follower) {
-
-            PathConstraints pathConstraints = new PathConstraints(0.995, 0.1, 0.1, 0.007, 100, 0.9, 10, 1);
-
             shootPreload = follower
-                    .pathBuilder().setConstraints(pathConstraints)
+                    .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(57.000, 9.000), new Pose(61.000, 83.000))
+                            new BezierLine(new Pose(56.000, 8.000), new Pose(61.000, 83.000))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(133))
+                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(132))
                     .build();
 
             alignIntake1 = follower
-                    .pathBuilder().setConstraints(pathConstraints)
+                    .pathBuilder()
                     .addPath(
                             new BezierLine(new Pose(61.000, 83.000), new Pose(45.600, 83.800))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(133), Math.toRadians(180))
+                    .setLinearHeadingInterpolation(Math.toRadians(132), Math.toRadians(180))
                     .build();
 
             intake1 = follower
-                    .pathBuilder().setConstraints(pathConstraints)
+                    .pathBuilder()
                     .addPath(
                             new BezierLine(new Pose(45.600, 83.800), new Pose(13.400, 83.800))
                     )
@@ -96,14 +91,12 @@ public class Far6Blue extends LinearOpMode {
                     .build();
 
             shoot2 = follower
-                    .pathBuilder().setConstraints(pathConstraints)
+                    .pathBuilder()
                     .addPath(
                             new BezierLine(new Pose(13.400, 83.800), new Pose(61.000, 83.000))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(133))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(132))
                     .build();
         }
     }
 }
-
-

@@ -49,7 +49,7 @@ public class Constants {
     public static TwoWheelConstants localizerConstants = new TwoWheelConstants()
             .forwardEncoder_HardwareMapName("intakeMotor")
             .forwardPodY(-3.95)
-            .strafeEncoder_HardwareMapName("frontLeft")
+            .strafeEncoder_HardwareMapName("frontRight")
             .strafePodX(0)
             .forwardEncoderDirection(Encoder.FORWARD)
             .strafeEncoderDirection(Encoder.REVERSE)

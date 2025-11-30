@@ -1,21 +1,20 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
 
 import dev.nextftc.core.commands.Command;
 
-public class ShootArtifact extends Command {
+public class ShootContinuous extends Command {
     private final Robot robot;
     private final int shots;
     private final ElapsedTime timer;
 
     private enum State {
         START_OUTTAKE,
-        WAIT_FOR_SPINUP,
-        WAIT_FOR_SHOOT,
+        WAIT,
+        START_INTAKE,
         STOP,
         DONE
     }
@@ -23,7 +22,7 @@ public class ShootArtifact extends Command {
     private State currentState;
     private int shotsFired;
 
-    public ShootArtifact(Robot robot, int shots) {
+    public ShootContinuous(Robot robot, int shots) {
         this.robot = robot;
         this.shots = shots;
         this.timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
@@ -41,29 +40,14 @@ public class ShootArtifact extends Command {
         switch (currentState) {
             case START_OUTTAKE:
                 robot.outtake.start.schedule();
-                currentState = State.WAIT_FOR_SPINUP;
+                currentState = State.WAIT;
                 break;
 
-            case WAIT_FOR_SPINUP:
-                if (robot.outtake.getTopRPM() >= 950) {
+            case WAIT:
+                if (robot.outtake.getTopRPM() > 950){
                     robot.intake.start.schedule();
-                    timer.reset();
-                    currentState = State.WAIT_FOR_SHOOT;
-                }
-                break;
 
-            case WAIT_FOR_SHOOT:
-                if (robot.outtake.getTopRPM() < 850 || timer.time() > 2) {
-                    robot.autoIntake.schedule();
-                    shotsFired++;
-
-                    if (shotsFired >= shots) {
-                        currentState = State.STOP;
-                    } else {
-                        currentState = State.WAIT_FOR_SPINUP;
-                    }
                 }
-                break;
 
             case STOP:
                 robot.autoIntakeStop.schedule();

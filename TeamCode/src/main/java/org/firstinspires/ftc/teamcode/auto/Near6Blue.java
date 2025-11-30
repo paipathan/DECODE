@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.util.Alliance;
-import org.firstinspires.ftc.teamcode.util.Drawing;
+import org.firstinspires.ftc.teamcode.Alliance;
+import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.Robot;
 
 import dev.nextftc.core.commands.CommandManager;
@@ -44,7 +44,6 @@ public class Near6Blue extends LinearOpMode {
                 robot.shootArtifact(3)
         );
 
-        Robot.endPose = new Pose(61, 83, Math.toRadians(133));
         autoRoutine.schedule();
         waitForStart();
 
