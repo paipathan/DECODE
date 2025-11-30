@@ -46,7 +46,6 @@ public class ShootContinuous extends Command {
             case WAIT:
                 if (robot.outtake.getTopRPM() > 950){
                     robot.intake.start.schedule();
-
                 }
 
             case STOP:
