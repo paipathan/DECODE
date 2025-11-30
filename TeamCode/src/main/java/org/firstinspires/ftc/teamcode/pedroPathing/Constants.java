@@ -64,10 +64,14 @@ public class Constants {
             );
 
     public static Follower createFollower(HardwareMap hardwareMap) {
-        return new FollowerBuilder(followerConstants, hardwareMap)
+        Follower follower = new FollowerBuilder(followerConstants, hardwareMap)
                 .pathConstraints(pathConstraints)
                 .mecanumDrivetrain(driveConstants)
                 .twoWheelLocalizer(localizerConstants)
                 .build();
+
+        follower.setPose(new com.pedropathing.geometry.Pose(0, 0, 0));
+
+        return follower;
     }
 }

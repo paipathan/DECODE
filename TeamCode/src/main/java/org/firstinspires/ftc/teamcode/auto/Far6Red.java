@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.AutonRobot;
 import org.firstinspires.ftc.teamcode.Alliance;
 import org.firstinspires.ftc.teamcode.Drawing;
 
@@ -22,10 +22,9 @@ public class Far6Red extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Robot robot = new Robot(hardwareMap, Alliance.BLUE, gamepad1);
+        AutonRobot robot = new AutonRobot(hardwareMap);
         Paths paths = new Paths(robot.follower);
         ElapsedTime timer  = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
-
         robot.follower.setStartingPose(new Pose(57, 9, Math.toRadians(90)).mirror()); // might need to set starting pose heading separately
         CommandManager.INSTANCE.cancelAll();
 
@@ -52,10 +51,10 @@ public class Far6Red extends LinearOpMode {
             telemetry.addData("RPM: ", robot.outtake.getTopRPM());
             telemetry.update();
 
-            Drawing.init();
-            Drawing.drawRobot(robot.follower.getPose());
-            Drawing.drawPoseHistory(robot.follower.getPoseHistory());
-            Drawing.sendPacket();
+                        Drawing.init();
+                        Drawing.drawRobot(robot.follower.getPose());
+                        Drawing.drawPoseHistory(robot.follower.getPoseHistory());
+                        Drawing.sendPacket();
         }
     }
 

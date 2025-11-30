@@ -1,14 +1,14 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.AutonRobot;
 import org.firstinspires.ftc.teamcode.Robot;
 
 import dev.nextftc.core.commands.Command;
 
 public class ShootArtifact extends Command {
-    private final Robot robot;
+    private final AutonRobot robot;
     private final int shots;
     private final ElapsedTime timer;
 
@@ -23,7 +23,7 @@ public class ShootArtifact extends Command {
     private State currentState;
     private int shotsFired;
 
-    public ShootArtifact(Robot robot, int shots) {
+    public ShootArtifact(AutonRobot robot, int shots) {
         this.robot = robot;
         this.shots = shots;
         this.timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
@@ -54,7 +54,7 @@ public class ShootArtifact extends Command {
 
             case WAIT_FOR_SHOOT:
                 if (robot.outtake.getTopRPM() < 850 || timer.time() > 2) {
-                    robot.autoIntake.schedule();
+                    robot.autoIntakeStop.schedule();
                     shotsFired++;
 
                     if (shotsFired >= shots) {

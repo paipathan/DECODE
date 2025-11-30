@@ -49,7 +49,20 @@ public class Robot {
         this.gamepad = gamepad;
         intake = new Intake(hwMap);
         outtake = new Outtake(hwMap);
+
+        this.alliance = alliance;
+        LimeLight.init(hwMap);
+
         follower = Constants.createFollower(hwMap);
+
+        Pose startPose = alliance == Alliance.BLUE ? new Pose(61,83, 90) : new Pose(61, 83, 90).mirror();
+        follower.setPose(startPose);
+
+        follower.startTeleopDrive();
+        follower.update();
+
+        targetPosition = alliance == Alliance.BLUE ? new Pose(0, 144) : new Pose(0, 144).mirror();
+        configureKeyBinds();
 
         autoIntake = new InstantCommand(() -> {
             intake.start.schedule();
@@ -60,15 +73,6 @@ public class Robot {
             intake.stop.schedule();
             outtake.bottomMotor.setPower(0);
         });
-
-        this.alliance = alliance;
-        LimeLight.init(hwMap);
-
-        follower.update();
-        // follower.startTeleopDrive(true);
-
-        targetPosition = alliance == Alliance.BLUE ? new Pose(0, 144) : new Pose(0, 144).mirror();
-        configureKeyBinds();
     }
 
     private void configureKeyBinds() {
@@ -100,9 +104,9 @@ public class Robot {
                     outtake.stop.schedule();
                     intake.stop.schedule();
                 }).whenTrue(() -> {
-                    if(outtake.getTopRPM() > 1200 && !Intake.isBusy) {
+                    if(outtake.getTopRPM() > 1000 && !Intake.isBusy) {
                         intake.start.schedule();
-                    } else if(outtake.getTopRPM() < 1200 && Intake.isBusy) {
+                    } else if(outtake.getTopRPM() < 1000 && Intake.isBusy) {
                         intake.stop.schedule();
                     }
                 });
@@ -114,8 +118,8 @@ public class Robot {
                     lastHeadingError = 0;
                 });
 //hi everyome its kunsh how is everyone doing today
-        Button zeroPose = button(() -> gamepad.a)
-                .whenBecomesTrue(() -> follower.setPose(new Pose(0, 0, 0)));
+//        Button zeroPose = button(() -> gamepad.a)
+//                .whenBecomesTrue(() -> follower.setPose(new Pose(0, 0, 0)));
 
         Button dpadUp = button(() -> gamepad.dpad_up)
                 .whenTrue(() -> {
@@ -139,7 +143,7 @@ public class Robot {
         }
 
         if(!Outtake.isBusy) {
-            outtake.topMotor.setPower(0.4);
+            outtake.topMotor.setPower(0.6);
         }
 
         follower.update();
@@ -188,11 +192,6 @@ public class Robot {
     public Command followPath(PathChain path, double maxPower) {
         return new FollowPath(path, this.follower, maxPower);
     }
-
-    public Command shootArtifact(int shots) {
-        return new ShootArtifact(this, shots);
-    }
-
 
 
     private double normalizeAngle(double angle) {

@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.AutonRobot;
 import org.firstinspires.ftc.teamcode.Robot;
 
 import dev.nextftc.core.commands.Command;
+import dev.nextftc.core.commands.delays.Delay;
 
 public class ShootContinuous extends Command {
-    private final Robot robot;
-    private final int shots;
+    private final AutonRobot robot;
     private final ElapsedTime timer;
 
     private enum State {
@@ -22,9 +23,8 @@ public class ShootContinuous extends Command {
     private State currentState;
     private int shotsFired;
 
-    public ShootContinuous(Robot robot, int shots) {
+    public ShootContinuous(AutonRobot robot) {
         this.robot = robot;
-        this.shots = shots;
         this.timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
         setInterruptible(true);
     }
@@ -32,7 +32,6 @@ public class ShootContinuous extends Command {
     @Override
     public void start() {
         currentState = State.START_OUTTAKE;
-        shotsFired = 0;
     }
 
     @Override
@@ -45,8 +44,18 @@ public class ShootContinuous extends Command {
 
             case WAIT:
                 if (robot.outtake.getTopRPM() > 950){
-                    robot.intake.start.schedule();
+                    currentState = State.START_INTAKE;
+                    timer.reset();
+                    break;
+                } else robot.autoIntake.schedule();
+                break;
+
+            case START_INTAKE:
+                robot.intake.start.schedule();
+                if (timer.seconds() >= 4){
+                    currentState = State.STOP;
                 }
+                break;
 
             case STOP:
                 robot.autoIntakeStop.schedule();

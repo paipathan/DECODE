@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Alliance;
 import org.firstinspires.ftc.teamcode.Drawing;
-import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.AutonRobot;
 
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.commands.delays.Delay;
@@ -22,21 +22,20 @@ public class Far6Blue extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Robot robot = new Robot(hardwareMap, Alliance.BLUE, gamepad1);
+        AutonRobot robot = new AutonRobot(hardwareMap);
         Paths paths = new Paths(robot.follower);
         ElapsedTime timer  = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
-
         robot.follower.setStartingPose(new Pose(56, 8, Math.toRadians(90)));
         CommandManager.INSTANCE.cancelAll();
 
 
         SequentialGroup autoRoutine = new SequentialGroup(
                 robot.followPath(paths.shootPreload, 1),
-                robot.shootArtifact(3),
+                robot.shootContinuous(),
                 robot.autoIntake,
                 robot.followPath(paths.alignIntake1, 0.75),
                 robot.followPath(paths.intake1, 0.5),
-                new Delay(1),
+                new Delay(0.75),
                 robot.autoIntakeStop,
                 robot.followPath(paths.shoot2, 0.5),
                 robot.shootArtifact(3)
@@ -52,10 +51,10 @@ public class Far6Blue extends LinearOpMode {
             telemetry.addData("RPM: ", robot.outtake.getTopRPM());
             telemetry.update();
 
-            Drawing.init();
-            Drawing.drawRobot(robot.follower.getPose());
-            Drawing.drawPoseHistory(robot.follower.getPoseHistory());
-            Drawing.sendPacket();
+                        Drawing.init();
+                        Drawing.drawRobot(robot.follower.getPose());
+                        Drawing.drawPoseHistory(robot.follower.getPoseHistory());
+                        Drawing.sendPacket();
         }
     }
     public static class Paths {
