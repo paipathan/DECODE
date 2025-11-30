@@ -47,7 +47,7 @@ public class ShootContinuous extends Command {
                     currentState = State.START_INTAKE;
                     timer.reset();
                     break;
-                } else robot.autoIntake.schedule();
+                }
                 break;
 
             case START_INTAKE:

@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.auto;
 
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.paths.PathConstraints;
+import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -15,6 +17,7 @@ import org.firstinspires.ftc.teamcode.AutonRobot;
 
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.commands.delays.Delay;
+import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 
 @Autonomous(name="[BLUE] Far 6", group="Auto")
@@ -30,15 +33,30 @@ public class Far6Blue extends LinearOpMode {
 
 
         SequentialGroup autoRoutine = new SequentialGroup(
+                // shot 1
                 robot.followPath(paths.shootPreload, 1),
-                robot.shootContinuous(),
+                robot.outtake.start,
+                new Delay(3),
+                robot.intake.start,
+                new Delay(5),
+                robot.outtake.stop,
+                robot.intake.stop,
+
+                // get ball row
                 robot.autoIntake,
                 robot.followPath(paths.alignIntake1, 0.75),
                 robot.followPath(paths.intake1, 0.5),
                 new Delay(0.75),
                 robot.autoIntakeStop,
+
+                // shot 2
                 robot.followPath(paths.shoot2, 0.5),
-                robot.shootArtifact(3)
+                robot.outtake.start,
+                new Delay(3),
+                robot.intake.start,
+                new Delay(5),
+                robot.outtake.stop,
+                robot.intake.stop
         );
 
         autoRoutine.schedule();
